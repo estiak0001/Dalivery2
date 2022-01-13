@@ -1,0 +1,138 @@
+﻿@model List<WebAppEs.Models.NavigationMenuViewModel>
+@{
+	ViewData["Title"] = "Edit Role Permission";
+}
+<style>
+    .tree,
+    .tree ul {
+        margin: 0 0 0 1em; /* indentation */
+        padding: 0;
+        list-style: none;
+        color: #369;
+        position: relative;
+    }
+
+        .tree ul {
+            margin-left: .5em
+        }
+            /* (indentation/2) */
+
+            .tree:before,
+            .tree ul:before {
+                content: "";
+                display: block;
+                width: 0;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                border-left: 1px solid;
+            }
+
+        .tree li {
+            margin: 0;
+            padding: 0 1.5em; /* indentation + .5em */
+            line-height: 2em; /* default list item's `line-height` */
+            font-weight: bold;
+            position: relative;
+        }
+
+            .tree li:before {
+                content: "";
+                display: block;
+                width: 10px; /* same with indentation */
+                height: 0;
+                border-top: 1px solid;
+                margin-top: -1px; /* border top width */
+                position: absolute;
+                top: 1em; /* (line-height/2) */
+                left: 0;
+            }
+
+            .tree li:last-child:before {
+                background: white; /* same with body background */
+                height: auto;
+                top: 1em; /* (line-height/2) */
+                bottom: 0;
+</style>
+<h1>Edit Role Permission</h1>
+
+<hr />
+@*<div class="row">
+	<div class="col-md-4">
+		<form asp-action="EditRolePermission">
+			<div class="form-group">
+                <ul style="list-style-type: none;">
+                    @if (Model.Count != 0)
+                    {
+                        var head = Model.Where(p => p.ParentMenuId == null).ToList();
+                        foreach (var item in head)
+                        {
+
+                            <li style=" background-color: #2a3f54; padding-top: 9px; padding-left: 5px; border-radius: 6px; margin-bottom: 7px; color: white;">
+                                <input type="checkbox" asp-for="@item.Permitted" />
+                                <label style="margin-left:10px;" asp-for="@item.Permitted">@item.Name</label>
+                                <input type="hidden" asp-for="@item.Id" />
+                                <input type="hidden" asp-for="@item.Name" />
+                            </li>
+                            var child = Model.Where(c => c.ParentMenuId == item.Id).ToList();
+                            foreach (var listmenu in child)
+                            {
+                                <li style="margin-left:20px">
+                                    <input type="checkbox" asp-for="@listmenu.Permitted" />
+                                    <label style="margin-left:10px;" asp-for="@listmenu.Permitted">@listmenu.Name</label>
+                                    <input type="hidden" asp-for="@listmenu.Id" />
+                                    <input type="hidden" asp-for="@listmenu.Name" />
+                                </li>
+                            }
+                        }
+                    }
+                </ul>
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Save" class="btn btn-primary" />
+				<a asp-action="Roles">Back to List</a>
+			</div>
+		</form>
+	</div>
+</div>*@
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="EditRolePermission">
+                <div class="form-group">
+                    <ul style="list-style-type: none;">
+                        @for (var i = 0; i < Model.Count; i++)
+                        {
+                            if (Model[i].ParentMenuId == null)
+                            {
+                                <li>
+                                    <input type="checkbox" asp-for="@Model[i].Permitted" />
+                                    <label style="margin-left:10px; color:blue" asp-for="@Model[i].Permitted">@Model[i].Name - Head</label>
+                                    <input type="hidden" asp-for="@Model[i].Id" />
+                                    <input type="hidden" asp-for="@Model[i].Name" />
+                                </li>
+
+                            }
+                            else
+                            {
+                                <li>
+                                    <input type="checkbox" asp-for="@Model[i].Permitted" />
+                                    <label style="margin-left:10px;" asp-for="@Model[i].Permitted">@Model[i].Name</label>
+                                    <input type="hidden" asp-for="@Model[i].Id" />
+                                    <input type="hidden" asp-for="@Model[i].Name" />
+                                </li>
+                            }
+
+                        }
+                    </ul>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <a asp-action="Roles">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

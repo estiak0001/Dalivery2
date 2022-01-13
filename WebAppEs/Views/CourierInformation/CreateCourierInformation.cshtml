@@ -1,0 +1,106 @@
+﻿@model WebAppEs.ViewModel.Courier.MobileRND_CourierInformation_VM
+@{
+    ViewData["Title"] = "Create Courier";
+}
+<style>
+    .rreedd {
+        color: red;
+    }
+</style>
+
+<div class="col-md-12 col-sm-12 ">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Create Courier Information</h2>
+
+            <div class="clearfix"><a style="float: right;" class="btn btn-sm btn-dark" asp-action="Index">Back to List</a></div>
+        </div>
+        <div class="x_content">
+            <br />
+            <form asp-action="CreateCourierInformation" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Courier Name <span class="rreedd required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <input asp-for="@Model.CourierName" placeholder="Enter Courier Name" type="text" id="first-name" required="required" class="form-control form-control-sm">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Cover Rate <span class="rreedd required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <input asp-for="@Model.CoverRate" placeholder="Enter Rate" type="text" id="first-name" required="required" class="form-control form-control-sm">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Non Cover Rate <span class="rreedd required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <input asp-for="@Model.NonCoverRate" placeholder="Enter Rate" type="text" id="first-name" required="required" class="form-control form-control-sm">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Rate Fixed From Date <span class="rreedd required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <input asp-for="@Model.RateFixedFromDate" type="date" id="first-name" required="required" class="form-control form-control-sm">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Rate Fixed To Date <span class="rreedd required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <input asp-for="@Model.RateFixedToDate" type="date" id="first-name" required="required" class="form-control form-control-sm">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Address
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <textarea asp-for="@Model.Address" placeholder="Enter Address" type="text" id="first-name" class="form-control form-control-sm"></textarea>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Contact Number
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <input asp-for="@Model.ContactNumber" placeholder="+880 1XXX NNNNNN" type="text" id="first-name" class="form-control form-control-sm">
+                    </div>
+                </div>
+
+                <div class="ln_solid"></div>
+                <div class="item form-group">
+                    <div class="col-md-6 col-sm-6 offset-md-3">
+
+                        @if (@Model.IsUpdate == "Update")
+                        {
+                            <button type="submit" class="btn btn-success">Update</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        }
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            //$('#ddlSalesChannel').select2();
+        });
+    </script>
+}
+

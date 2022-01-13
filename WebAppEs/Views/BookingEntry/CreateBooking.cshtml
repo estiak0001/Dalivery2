@@ -1,0 +1,758 @@
+﻿@model WebAppEs.ViewModel.Booking.MobileRND_BookingEntry_VM
+@inject IJsonHelper Json;
+@{
+    ViewData["Title"] = "Booking";
+}
+<style>
+    .form-control {
+        border-radius: 3px !important;
+        width: 100%;
+        border-color: black;
+    }
+
+        .form-control:focus {
+            border-color: blue;
+        }
+
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 90%;
+    }
+
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    .customernamefromontype {
+        white-space: nowrap;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border: 1px solid #ffe727;
+        background-color: #fff8bc;
+        color: black;
+    }
+</style>
+<div class="col-md-12 ">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Booking Information</h2>
+
+            <p class="badge badge-dark" style="float: right; font-size: large; margin: 0px; background-color:darkgoldenrod">Approved</p>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <br />
+            <form class="form-label-left input_mask">
+                <div class="row">
+                    <div class="col-md-2 col-sm-2  form-group has-feedback">
+                        <label style="padding-left: 10px;">Booking Date</label>
+                        <div class="item form-group">
+                            <div class="col-md-12 col-sm-12 ">
+                                <input asp-for="BookingDate" type="date" class="form-control has-feedback-left" id="txtBookingDate" placeholder="Booking Date">
+                                <span class="fa fa-calendar form-control-feedback left" aria-hidden="true"></span>
+                                <span class="error">Enter Booking Date!</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-2  form-group has-feedback">
+                        <label style="padding-left: 10px;">Payment Type</label>
+                        <div class="item form-group">
+                            <div class="col-md-12 col-sm-12 ">
+                                <select asp-for="PaymentTypeId" id="ddlPayment" class="form-control">
+                                    <option value="">--Select Payment Type--</option>
+                                    @foreach (var item in Model.paymentTypeList)
+                                    {
+                                        <option value="@item.Id">@item.TypeName</option>
+                                    }
+                                </select>
+                                <span class="error">Select Payment Type!</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-2  form-group has-feedback">
+                        <label style="padding-left: 10px;">Courier</label>
+                        <div class="item form-group">
+                            <div class="col-md-12 col-sm-12 ">
+                                <select asp-for="CourierId" id="ddlCourier" class="form-control">
+                                    <option value="">--Select Courier--</option>
+                                    @foreach (var item in Model.courierList)
+                                    {
+                                        <option value="@item.Id">@item.CourierName</option>
+                                    }
+                                </select>
+                                <span class="error">Select Courier!</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-2  form-group has-feedback">
+                        <label style="padding-left: 10px;">Courier Type</label>
+                        <div class="item form-group">
+                            <div class="col-md-12 col-sm-12 ">
+                                <select id="ddlCourierType" class="form-control">
+                                    <option value="">--Select Courier Type--</option>
+                                    <option value="Cover">Cover</option>
+                                    <option value="Non Cover">Non Cover</option>
+                                </select>
+                                <span class="error">Select Courier Type!</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2 col-sm-2  form-group has-feedback">
+                        <label style="padding-left: 10px;">Brand</label>
+                        <div class="item form-group">
+                            <div class="col-md-12 col-sm-12 ">
+                                <select asp-for="BrandID" id="ddlBrand" class="form-control">
+                                    <option style="color: #8d9195!important" value="">--Select Brand--</option>
+                                    @foreach (var item in Model.brandList)
+                                    {
+                                        <option value="@item.Id">@item.BrandName</option>
+                                    }
+                                </select>
+                                <span class="error">Select Brand!</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2 col-sm-2  form-group has-feedback">
+                        <label style="padding-left: 10px;">Product</label>
+                        <div class="item form-group">
+                            <div class="col-md-12 col-sm-12 ">
+                                <select asp-for="ProductID" id="ddlProduct" class="form-control">
+                                    <option value="">--Select Brand--</option>
+                                    @foreach (var item in Model.productList)
+                                    {
+                                        <option selected value="@item.Id">@item.ProductName</option>
+                                    }
+                                </select>
+                                <span class="error">Select Product!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="border: 1px solid; padding-top:5px; margin-bottom:7px; border-radius: 9px; background: floralwhite;" class="row">
+                    <div style="text-align: center; padding: 0px;" class="col-md-2 col-sm-2  form-group has-feedback">
+                        <label style="padding-left: 10px;">CN No.</label>
+                        <div class="item form-group">
+                            <div class="col-md-12 col-sm-12 ">
+                                <input tabindex="1" type="text" class="form-control form-control-sm details" id="details1" placeholder="CN No.">
+                                <span class="error">Enter CN No.!</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; padding: 0px;" class="col-md-1 col-sm-1  form-group has-feedback">
+                        <label style="padding-left: 10px;">Quantity</label>
+                        <div class="item form-group">
+                            <div class="col-md-12 col-sm-12 ">
+                                <input tabindex="2" type="number" class="form-control form-control-sm details quantitycalc" id="details2" placeholder="Quantity">
+                                <span class="error">Enter Qty!</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; padding: 0px;" class="col-md-1 col-sm-1  form-group has-feedback">
+                        <label style="padding-left: 10px;">Amount</label>
+                        <div class="item form-group">
+                            <div class="col-md-12 col-sm-12 ">
+                                <input id="details3" tabindex="3" type="number" class="form-control form-control-sm details amountcalc" placeholder="Amount">
+                                <span class="error">Enter Amount!</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; padding: 0px;" class="col-md-1 col-sm-1  form-group has-feedback">
+                        <label style="padding-left: 10px;">Rate</label>
+                        <div class="item form-group">
+                            <div class="col-md-12 col-sm-12 ">
+                                <input readonly type="number" class="form-control form-control-sm details" id="details4" placeholder="Rate">
+                                <span class="error">Enter Rate!</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; padding: 0px;" class="col-md-2 col-sm-2  form-group has-feedback">
+                        <label style="padding-left: 10px;">Customer No.</label>
+                        <div class="item form-group">
+                            <div class="col-md-12 col-sm-12 ">
+                                <input tabindex="4" type="text" class="form-control form-control-sm details customertype" id="details5" placeholder="Customer No">
+                                <span class="error">Enter valid Customer No.!</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; padding: 0px;" class="col-md-3 col-sm-3  form-group has-feedback">
+                        <label style="padding-left: 10px;">Customer Name</label>
+                        <div class="item form-group">
+                            <div class="col-md-12 col-sm-12 ">
+                                <label type="text" class="form-control form-control-sm customernamefromontype" id="" placeholder=""></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; padding: 0px;" class="col-md-2 col-sm-2  form-group has-feedback">
+                        <label style="padding-left: 10px;">Remarks</label>
+                        <div class="item form-group">
+                            <div class="col-md-12 col-sm-12 ">
+                                <textarea type="text" class="form-control form-control-sm details" id="details6" placeholder="Remarks/Note"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align:center">
+                    <input type="button" class="btn btn-sm btn-success" id='addDetails' value='Add' />
+                </div>
+                <div style="width:100%!important; padding-left:20px;" class="row">
+                    <div style="width:100%!important" class="" id="DetailsData">
+                    </div>
+                </div>
+                <div class="ln_solid"></div>
+                <div class="form-group row">
+                    <div style="text-align:center" class="col-md-12 col-sm-12">
+                        <a asp-action="Index" class="btn btn-dark">Back to List</a>
+                        @*<button style="float:right" class="btn btn-primary" type="reset">Reset</button>*@
+                        <button style="text-align: center; background-color: darkgreen!important; border-color: darkgreen!important;" id="ApproveData" type="button" class="btn btn-success">Approve</button>
+                        <button style="float:right" id="submitData" type="button" class="btn btn-success">Submit</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+
+@section scripts{
+    <script>
+        var DetailsData = [];
+        var IsCustomerValid = false;
+        var RateValue = 0;
+
+        var LoadEiditData = @Json.Serialize(Model.bookingDetails);
+
+        console.log(LoadEiditData);
+
+        if (LoadEiditData != null) {
+            if (LoadEiditData.length != 0) {
+                    faultsItem = [];
+                for (var h = 0; h < LoadEiditData.length; h++) {
+
+                    console.log(LoadEiditData[h].analysisType);
+
+                    DetailsData.push({
+                        CNNumber: LoadEiditData[h].cnNumber,
+                        Quantity: parseInt(LoadEiditData[h].quantity),
+                        Ammount: LoadEiditData[h].ammount,
+                        Rate: parseFloat(parseFloat(LoadEiditData[h].rate).toFixed(2)),
+                        CourierType: LoadEiditData[h].courierType,
+                        CustomerNo: LoadEiditData[h].customerNo,
+                        Remarks: LoadEiditData[h].remarks,
+                    });
+                }
+                console.log(DetailsData);
+                GeneratedItemsTable();
+            }
+        }
+
+        $(document).ready(function () {
+
+            $('.details').keyup(function (e) {
+                if (e.keyCode == 13) {
+                    addListData();
+                }
+            });
+            $('#addDetails').click(function () {
+                addListData();
+            });
+            $('input').on('keydown', function (eInner) {
+                if (eInner.which === 39) { //enter key
+                    var tabindex = $(this).attr('tabindex');
+                    tabindex++; //increment tabindex
+                    $('[tabindex=' + tabindex + ']').focus();
+                }
+                if (eInner.which === 37) { //enter key
+                    var tabindex = $(this).attr('tabindex');
+                    tabindex--; //increment tabindex
+                    $('[tabindex=' + tabindex + ']').focus();
+
+                    //$("#details" + tabindex).select();
+                    // var searchInput = $("#details" + tabindex);
+                    //var tmp = input.val();
+                    //input.focus().val("").blur().focus().val(tmp).select();
+
+                    //$("#details" + tabindex).val()
+                    //alert($("#details" + tabindex).val());
+                }
+            });
+            $('#ddlCourierType').on("change", function () {
+                $('#details2').val("");
+                $('#details3').val("");
+                var Couriertype = $('#ddlCourierType').val();
+                var CourierID = $('#ddlCourier').val();
+                if (CourierID != "") {
+                    if (Couriertype != "") {
+                        var obj = { "CourierID": CourierID, "Couriertype": Couriertype };
+                        AjaxCall('@Url.Action("GetRate", "BookingEntry")', obj, 'POST').done(function (response) {
+                            if (response.rate != "") {
+                                RateValue = 0;
+                                console.log(response.rate);
+                                RateValue = response.rate;
+                                $('#details4').val(RateValue);
+                            }
+                            else {
+                                $('#details4').val("");
+                                RateValue = 0;
+                            }
+                        }).fail(function (error) {
+                            alert(error.StatusText);
+                            RateValue = 0;
+                        });
+                    }
+                    else {
+                        $('#details4').val("");
+                    }
+                }
+                else {
+                    alert("Select Courier First");
+                    $('#ddlCourierType').val("");
+                    $('#details4').val("");
+                    RateValue = 0;
+                }
+            });
+            $('#ddlCourier').on("change", function () {
+                var Couriertype = $('#ddlCourierType').val();
+                var CourierID = $('#ddlCourier').val();
+                if (Couriertype != "") {
+                    if (CourierID != "") {
+                        var obj = { "CourierID": CourierID, "Couriertype": Couriertype };
+                        AjaxCall('@Url.Action("GetRate", "BookingEntry")', obj, 'POST').done(function (response) {
+                            if (response.rate != "") {
+                                console.log(response.rate);
+                                $('#details4').val(response.rate);
+                            }
+                            else {
+                                $('#details4').val("");
+                            }
+                        }).fail(function (error) {
+                            alert(error.StatusText);
+                        });
+                    }
+                    else {
+                        $('#details4').val("");
+                    }
+                }
+                else {
+                    $('#details4').val("");
+                }
+            });
+            $('#ddlCourierType').on("change", function () {
+                var Couriertype = $('#ddlCourierType').val();
+                var CourierID = $('#ddlCourier').val();
+                if (CourierID != "") {
+                    if (Couriertype != "") {
+                        var obj = { "CourierID": CourierID, "Couriertype": Couriertype };
+                        AjaxCall('@Url.Action("GetRate", "BookingEntry")', obj, 'POST').done(function (response) {
+                            if (response.rate != "") {
+                                console.log(response.rate);
+                                $('#details4').val(response.rate);
+                            }
+                            else {
+                                $('#details4').val("");
+                            }
+                        }).fail(function (error) {
+                            alert(error.StatusText);
+                        });
+                    }
+                    else {
+                        $('#details4').val("");
+                    }
+                }
+                else {
+                    alert("Select Courier First");
+                    $('#ddlCourierType').val("");
+                    $('#details4').val("");
+                }
+            });
+            $('.quantitycalc').keyup(function () {
+                //alert("0")
+                var val1 = $("#details2").val(),
+                    val2 = $("#details4").val();
+                $("#details3").val(Number(val1) * Number(val2));
+            });
+            $('.amountcalc').keyup(function () {
+                //alert("0")
+                var val1 = $("#details2").val(),
+                    val2 = $("#details3").val();
+                $("#details4").val(parseFloat((Number(val2) / Number(val1))).toFixed(2));
+            });
+            $('.customertype').keyup(function () {
+                IsCustomerValid = false;
+                var CustomerNo = $('#details5').val();
+
+                if (CustomerNo != "") {
+                    var obj = { "CustomerNo": CustomerNo};
+                        AjaxCall('@Url.Action("GetCustomer", "BookingEntry")', obj, 'POST').done(function (response) {
+                            if (response != null) {
+                                console.log(response.customerName);
+                                $('.customernamefromontype').text(response.customerName);
+                                $('.customernamefromontype').prop('title', response.customerName);
+                                IsCustomerValid = true;
+                            }
+                            else {
+                                $('.customernamefromontype').text("");
+                                $('.customernamefromontype').prop('title', "");
+                                IsCustomerValid = false;
+                            }
+                        }).fail(function (error) {
+                            alert(error.StatusText);
+                            IsCustomerValid = false;
+                        });
+                    }
+                    else {
+                    $('.customernamefromontype').text("");
+                    $('.customernamefromontype').prop('title', "");
+                        IsCustomerValid = false;
+                    }
+            });
+
+
+
+            $('#submitData').click(function () {
+                //validation of save
+                var isAllValid = true;
+
+                if (DetailsData.length == 0) {
+                    $('#DetailsData').html('<span style="color:red;">Please add details first!</span>');
+                    isAllValid = false;
+                }
+
+
+                if ($('#txtBookingDate').val().trim() == '') {
+                    isValidItem = false;
+                    $('#txtBookingDate').siblings('span.error').css('visibility', 'visible');
+                }
+                else {
+                    $('#txtBookingDate').siblings('span.error').css('visibility', 'hidden');
+                }
+
+                if ($('#ddlPayment').val().trim() == '') {
+                    isValidItem = false;
+                    $('#ddlPayment').siblings('span.error').css('visibility', 'visible');
+                }
+                else {
+                    $('#ddlPayment').siblings('span.error').css('visibility', 'hidden');
+                }
+
+
+                if ($('#ddlCourier').val().trim() == '') {
+                    isValidItem = false;
+                    $('#ddlCourier').siblings('span.error').css('visibility', 'visible');
+                }
+                else {
+                    $('#ddlCourier').siblings('span.error').css('visibility', 'hidden');
+                }
+
+                if ($('#ddlCourierType').val().trim() == '') {
+                    isValidItem = false;
+                    $('#ddlCourierType').siblings('span.error').css('visibility', 'visible');
+                }
+                else {
+                    $('#ddlCourierType').siblings('span.error').css('visibility', 'hidden');
+                }
+                if ($('#ddlBrand').val().trim() == '') {
+                    isValidItem = false;
+                    $('#ddlBrand').siblings('span.error').css('visibility', 'visible');
+                }
+                else {
+                    $('#ddlBrand').siblings('span.error').css('visibility', 'hidden');
+                }
+
+                if ($('#ddlProduct').val().trim() == '') {
+                    isValidItem = false;
+                    $('#ddlProduct').siblings('span.error').css('visibility', 'visible');
+                }
+                else {
+                    $('#ddlProduct').siblings('span.error').css('visibility', 'hidden');
+                }
+                //Save if valid
+                if (isAllValid) {
+                    var data = {
+                        BookingDate: $('#txtBookingDate').val().trim(),
+                        PaymentTypeId: $('#ddlPayment').val().trim(),
+                        CourierId: $('#ddlCourier').val().trim(),
+                        BrandID: $('#ddlBrand').val().trim(),
+                        ProductID: $('#ddlProduct').val().trim(),
+
+                        bookingDetails: DetailsData
+                    }
+                    console.log(data);
+
+                    $(this).val('Please wait...');
+
+                    $.ajax({
+                        url: '@Url.Action("BookingDataEntry", "BookingEntry")',
+                        type: "POST",
+                        data: JSON.stringify(data),
+                        dataType: "JSON",
+                        contentType: "application/json",
+                        success: function (d) {
+                            //showpop5("Data Save Successfully.", "Success!", "success")
+                            notificationme("Data Submited Successfully.", "success");
+                            //window.location.href = '@Url.Action("Index", "BookingEntry")';
+                        },
+                        error: function () {
+                            //alert('Error. Please try again.');
+                            //showpop5("Something went wrong. Please try again.", "Error!", "error")
+                            notificationme("Something went wrong. Please try again.", "error");
+                        }
+                    });
+                }
+            });
+        });
+
+        function AjaxCall(url, data, type) {
+            return $.ajax({
+                url: url,
+                type: type,
+                data: data,
+                //contentType: 'application/json'
+            });
+        }
+        function addListData() {
+            var isValidItem = true;
+            if ($('#txtBookingDate').val().trim() == '') {
+                isValidItem = false;
+                $('#txtBookingDate').siblings('span.error').css('visibility', 'visible');
+            }
+            else {
+                $('#txtBookingDate').siblings('span.error').css('visibility', 'hidden');
+            }
+
+            if ($('#ddlPayment').val().trim() == '') {
+                isValidItem = false;
+                $('#ddlPayment').siblings('span.error').css('visibility', 'visible');
+            }
+            else {
+                $('#ddlPayment').siblings('span.error').css('visibility', 'hidden');
+            }
+
+
+            if ($('#ddlCourier').val().trim() == '') {
+                isValidItem = false;
+                $('#ddlCourier').siblings('span.error').css('visibility', 'visible');
+            }
+            else {
+                $('#ddlCourier').siblings('span.error').css('visibility', 'hidden');
+            }
+
+            if ($('#ddlCourierType').val().trim() == '') {
+                isValidItem = false;
+                $('#ddlCourierType').siblings('span.error').css('visibility', 'visible');
+            }
+            else {
+                var CourierType = $('#ddlCourierType').val().trim();
+                $('#ddlCourierType').siblings('span.error').css('visibility', 'hidden');
+            }
+            if ($('#ddlBrand').val().trim() == '') {
+                isValidItem = false;
+                $('#ddlBrand').siblings('span.error').css('visibility', 'visible');
+            }
+            else {
+                $('#ddlBrand').siblings('span.error').css('visibility', 'hidden');
+            }
+
+            if ($('#ddlProduct').val().trim() == '') {
+                isValidItem = false;
+                $('#ddlProduct').siblings('span.error').css('visibility', 'visible');
+            }
+            else {
+                $('#ddlProduct').siblings('span.error').css('visibility', 'hidden');
+            }
+
+            if ($('#details1').val().trim() == '') {
+                isValidItem = false;
+                $('#details1').siblings('span.error').css('visibility', 'visible');
+            }
+            else {
+                var CNNumber = $('#details1').val().trim();
+                $('#details1').siblings('span.error').css('visibility', 'hidden');
+            }
+
+            if ($('#details2').val().trim() == '') {
+                isValidItem = false;
+                $('#details2').siblings('span.error').css('visibility', 'visible');
+            }
+            else {
+                var Quantity = $('#details2').val().trim();
+                $('#details2').siblings('span.error').css('visibility', 'hidden');
+            }
+            if ($('#details3').val().trim() == '') {
+                isValidItem = false;
+                $('#details3').siblings('span.error').css('visibility', 'visible');
+            }
+            else {
+                var Amount = $('#details3').val().trim();
+                $('#details3').siblings('span.error').css('visibility', 'hidden');
+            }
+            if ($('#details4').val().trim() == '') {
+                isValidItem = false;
+                $('#details4').siblings('span.error').css('visibility', 'visible');
+            }
+            else {
+                var Rate = $('#details4').val().trim();
+                $('#details4').siblings('span.error').css('visibility', 'hidden');
+            }
+            if ($('#details5').val().trim() == '' || IsCustomerValid == false) {
+                isValidItem = false;
+                $('#details5').siblings('span.error').css('visibility', 'visible');
+            }
+            else {
+                var CustomerNo = $('#details5').val().trim();
+                $('#details5').siblings('span.error').css('visibility', 'hidden');
+            }
+
+
+
+            if (isValidItem) {
+                var isExixtsSubCategory = checkIfObjectExist(DetailsData, CNNumber)
+                if (isExixtsSubCategory) {
+                    notificationme("You already added this [ " + CNNumber + " ] CN Number, Please Remove to update!", "info");
+                    $('[tabindex=1]').focus();
+                }
+                else {
+                    DetailsData.push({
+                        CNNumber: CNNumber,
+                        Quantity: parseInt(Quantity),
+                        Ammount: parseInt(Amount),
+                        Rate: parseFloat(parseFloat(Rate).toFixed(2)),
+                        CourierType: CourierType,
+                        CustomerNo: CustomerNo,
+                        Remarks: $('#details6').val().trim(),
+                    });
+                    $('[tabindex=1]').focus();
+                    $('#details1, #details2,#details3,#details5,#details6').val("");
+                    $('#details4').val(RateValue);
+                    $('#details1').val(parseInt(CNNumber) + 1)
+                }
+                console.log(DetailsData);
+                GeneratedItemsTable();
+            }
+            else {
+                $('[tabindex=1]').focus();
+            }
+
+        }
+        function checkIfObjectExist(arr, id) {
+            console.log(id);
+            if (arr.length > 0) {
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i].CNNumber === id) {
+                        return true;
+                    }
+                }
+            }
+            else {
+                return false;
+            }
+        }
+        function GeneratedItemsTable() {
+            if (DetailsData.length > 0) {
+
+                DetailsData.sort(function (a, b) {
+                    return parseInt(b.CNNumber) - parseInt(a.CNNumber);
+                });
+
+                var $table = $('<table style="text-align: center;" id="tempTable" class="table table-sm table-striped table-bordered" style="width:100%"/>');
+                $table.append('<thead style = "background-color: #323232; color: white;"><tr><th style="background-color: darkred;">CN No.</th><th>Quantity</th><th>Amount</th><th>Rate</th><th>Courier Type</th><th style="background-color: darkred;">Customer No.</th><th>Remarks</th><th>Edit</th><th></th></tr></thead>');
+                var $tbody = $('<tbody/>');
+                $.each(DetailsData, function (i, val) {
+                    var $row = $('<tr/>');
+                    $row.append($('<td/>').html(val.CNNumber));
+                    $row.append($('<td/>').html(val.Quantity));
+                    $row.append($('<td/>').html(val.Ammount));
+                    $row.append($('<td/>').html(val.Rate));
+                    $row.append($('<td/>').html(val.CourierType));
+                    $row.append($('<td/>').html(val.CustomerNo));
+                    $row.append($('<td/>').html(val.Remarks));
+                    var $edit = $('<a href="#"><i style="font-size: 17px; color:#3800ff;" class="fa fa-edit"></i></a>');
+                    $edit.click(function (e) {
+                        e.preventDefault();
+                        IsCustomerValid = true;
+
+                        $('#details1').val(DetailsData[i].CNNumber);
+                        $('#details2').val(DetailsData[i].Quantity);
+                        $('#details3').val(DetailsData[i].Ammount);
+                        $('#details4').val(DetailsData[i].Rate);
+                        $('#details5').val(DetailsData[i].CustomerNo);
+
+                        $('#ddlCourierType').val(DetailsData[i].CourierType);
+                        $('[tabindex=1]').focus();
+                        //DetailsData.splice(i, 1);
+                        //GeneratedItemsTable();
+                        
+                        DetailsData.splice(i, 1);
+                        GeneratedItemsTable();
+                    });
+                    $row.append($('<td/>').html($edit));
+                    var $remove = $('<a href="#"><i style="font-size: 17px; color:red;" class="fa fa-trash"></i></a>');
+                    $remove.click(function (e) {
+                        e.preventDefault();
+                        //console.log(DetailsData[i]);
+                        DetailsData.splice(i, 1);
+                        GeneratedItemsTable();
+                    });
+                    $row.append($('<td/>').html($remove));
+                    $tbody.append($row);
+                });
+                //console.log("current", DetailsData);
+                $table.append($tbody);
+                $('#DetailsData').html($table);
+
+                $('#tempTable').DataTable({
+                    "ordering": false,
+                    pageLength: 50,
+                });
+                
+            }
+            else {
+                $('#DetailsData').html('');
+            }
+        }
+        function notificationme(messagess, typeofToast) {
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "preventDuplicates": true,
+                "onclick": null,
+                "showDuration": "100",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "show",
+                "hideMethod": "hide"
+            };
+            if (typeofToast == "error") {
+                toastr.error(messagess);
+            }
+            else if (typeofToast == "success") {
+                toastr.success(messagess);
+            }
+            else if (typeofToast == "info") {
+                toastr.info(messagess);
+            }
+        }
+    </script>
+}

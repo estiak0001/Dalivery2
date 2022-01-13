@@ -1,0 +1,47 @@
+﻿@model IEnumerable<WebAppEs.Models.RoleViewModel>
+@{
+	ViewData["Title"] = "Roles";
+}
+
+<div class="x_panel shadow p-3 mb-5 bg-white rounded">
+    <div class="container">
+        <div class="x_title">
+            <h2>Roles</h2>
+            <div class="nav navbar-right panel_toolbox">
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <div style="" class="container">
+                <div class="card-box table-responsive">
+                    <table id="datatable-responsive" class="table table-sm  dt-responsive nowrap" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Name)
+                                </th>
+                                <th>
+
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        <a style=" font-size: large; color: blue;" asp-action="EditRolePermission" asp-controller="Admin" asp-route-id="@item.Id"> <i class="fa fa-edit"></i> </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

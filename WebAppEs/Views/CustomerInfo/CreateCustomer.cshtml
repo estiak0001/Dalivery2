@@ -1,0 +1,155 @@
+﻿@model WebAppEs.ViewModel.Customer.MobileRND_CustomerInfo_VM
+@{
+    ViewData["Title"] = "Create Customer";
+}
+<style>
+    .rreedd {
+        color:red;
+    }
+    
+</style>
+
+<div class="col-md-12 col-sm-12 ">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Create Customer</h2>
+
+            <div class="clearfix"><a style="float: right;" class="btn btn-sm btn-dark" asp-action="Index">Back to List</a></div>
+        </div>
+        <div class="x_content">
+            <br />
+            <form asp-action="CreateCustomer" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Customer Number <span class="rreedd required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        @if (Model.IsUpdate == "Update")
+                        {
+                            <input disabled asp-for="@Model.CustomerNo" placeholder="Enter Customer Number" type="text" id="first-name" required="required" class="form-control form-control-sm">
+                        }
+                        else
+                        {
+                            <input asp-for="@Model.CustomerNo" placeholder="Enter Customer Number" type="text" id="first-name" required="required" class="form-control form-control-sm">
+                        }
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Name <span class="rreedd required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <input asp-for="@Model.CustomerName" placeholder="Enter Customer Name" type="text" id="first-name" required="required" class="form-control form-control-sm">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Sales Channel <span class="rreedd required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <select asp-for="SalesChannelID" required id="ddlSalesChannel" class="form-control form-control-sm select2">
+                            <option value="">--Select Sales Channel--</option>
+                            @foreach (var item in Model.SalesChannelList)
+                            {
+                                <option value="@item.Id">@item.ChannelName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Zone <span class="rreedd required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <select asp-for="ZoneID" required id="ddlZone" class="form-control form-control-sm">
+                            <option value="">--Select Zone--</option>
+                            @foreach (var item in Model.ZoneList)
+                            {
+                                <option value="@item.Id">@item.ZoneName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Product <span class="rreedd required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <select asp-for="ProductID" id="ddlProduct" class="form-control form-control-sm">
+                            <option value="">--Select Brand--</option>
+                            @foreach (var item in Model.productList)
+                            {
+                                <option selected value="@item.Id">@item.ProductName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Brand <span class="rreedd required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <select asp-for="BrandID" id="ddlBrand" class="form-control form-control-sm">
+                            <option style="color: #8d9195!important" value="">--Select Brand--</option>
+                            @foreach (var item in Model.brandList)
+                            {
+                                <option value="@item.Id">@item.BrandName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Address
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <textarea asp-for="@Model.Address" placeholder="Enter Customer Address" type="text" id="first-name" class="form-control form-control-sm"></textarea>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Delivery Address
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <textarea asp-for="@Model.DeliveryAddress" placeholder="Enter Customer Delivery Address" type="text" id="first-name" class="form-control form-control-sm"></textarea>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Phone Number
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <input asp-for="@Model.PhoneNo" placeholder="+880 1XXX NNNNNN" type="text" id="first-name" class="form-control form-control-sm">
+                    </div>
+                </div>
+
+                <div class="ln_solid"></div>
+                <div class="item form-group">
+                    <div class="col-md-6 col-sm-6 offset-md-3">
+
+                        @if (@Model.IsUpdate == "Update")
+                        {
+                            <button type="submit" class="btn btn-success">Update</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        }
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#ddlSalesChannel').select2();
+        });
+    </script>
+}
+

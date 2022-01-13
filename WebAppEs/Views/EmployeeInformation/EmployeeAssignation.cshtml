@@ -1,0 +1,528 @@
+﻿@model WebAppEs.ViewModel.EmployeeInformation.MobileRND_AssignedEmployeeOrCustomer_VM
+@{
+    ViewData["Title"] = "Employee Assignation";
+}
+<style>
+    .rreedd {
+        color: red;
+    }
+
+    label {
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    /*#ddlAllEmployee, #ddlAssignableEmployee {
+        color: black;
+    }*/
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #000000;
+        padding-top: 5px;
+    }
+
+    .select2-results__option {
+        padding: 6px;
+        user-select: none;
+        -webkit-user-select: none;
+        border-bottom: 1px solid;
+    }
+
+    .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--multiple {
+        border: 1px solid #080808;
+        border-radius: 5px;
+        min-height: 38px;
+    }
+
+    span.error {
+        display: block;
+        display: none;
+        color: red;
+        font-size: 90%;
+    }
+</style>
+<link href="~/css/radioocs.css" rel="stylesheet" />
+
+<div class="col-md-12 col-sm-12 ">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2 style="color: #05445e; font-weight: bolder;">Employee / Customer Assignation</h2>
+            <div class="clearfix"><a style="float: right;" class="btn btn-sm btn-dark" asp-action="Index">Back to List</a></div>
+        </div>
+        <div class="x_content">
+            <br />
+            <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        @*<div class="row">
+                                <div class="col-md-2">
+                                    DNSM:
+                                    <input type="radio" class="" name="employeeType" id="dnsm" value="DNSM" checked="checked" required />
+                                </div>
+                                <div class="col-md-2">
+                                    ASM:
+                                    <input type="radio" class="" name="employeeType" id="asm" value="ASM" />
+                                </div>
+                                <div class="col-md-2">
+                                    TSO:
+                                    <input type="radio" class="" name="employeeType" id="tso" value="TSO" />
+                                </div>
+                            </div>*@
+                        <div class="wrapper">
+                            <input type="radio" name="employeeType" id="option-3" value="TSO">
+                            <input type="radio" name="employeeType" id="option-2" value="ASM">
+                            <input type="radio" name="employeeType" id="option-1" value="DNSM">
+                            <label for="option-3" class="option option-3">
+                                <div class="dot"></div>
+                                <span>TSO</span>
+                            </label>
+                            <label for="option-2" class="option option-2">
+                                <div class="dot"></div>
+                                <span>ASM</span>
+                            </label>
+                            <label for="option-1" class="option option-1">
+                                <div class="dot"></div>
+                                <span>DNSM</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Employee <span class="rreedd required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <select id="ddlAllEmployee" class="form-control form-control-sm">
+                            <option value="">--Select Employee--</option>
+                        </select>
+                        <span class="error">Please select Employee!</span>
+                    </div>
+                </div>
+                <div style="display:none" id="chan" class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Sales Channel <span class="rreedd required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <select style="color: black; width: 100%;" asp-for="SalesChannelID" id="ddlSalesChannel" class="form-control form-control-sm select2">
+                            <option value="">--Select Sales Channel--</option>
+                            @foreach (var item in Model.SalesChannelList)
+                            {
+                                <option value="@item.Id">@item.ChannelName</option>
+                            }
+                        </select>
+                        <span class="error">Please select Channel!</span>
+                    </div>
+                </div>
+                <div style="display:none" id="zonee" class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Zone <span class="rreedd required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <select style="color: black; width: 100%;" asp-for="ZoneID" id="ddlZone" class="form-control form-control-sm">
+                            <option value="">--Select Zone--</option>
+                            @foreach (var item in Model.ZoneList)
+                            {
+                                <option value="@item.Id">@item.ZoneName</option>
+                            }
+                        </select>
+                        <span class="error">Please select Zone!</span>
+                    </div>
+                </div>
+
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Assignable Employee/Customer <span class="rreedd required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6">
+                        <select style="border-color: darkviolet; border-radius: 6px;" id="ddlAssignableEmployee" class="form-control form-control-sm">
+                            <option style="color:darkgoldenrod!important" value="">--Select assignable Employee or Customer--</option>
+                        </select>
+                        <span class="error">Please select Assignable Employee!</span>
+                    </div>
+                    <div class="col-md-2 col-sm-2 ">
+                        <input type="button" class="btn btn-sm btn-warning" id="add" value="Add" />
+                        <input style="display:none" type="button" class="btn btn-sm btn-info" id="addAll" value="Add All" />
+                    </div>
+                </div>
+
+
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <div class="" id="AssignedList">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ln_solid"></div>
+                <div class="item form-group">
+                    <div class="col-md-6 col-sm-6 offset-md-3">
+                        <input type="button" class="btn btn-success" value="Submit" />
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    
+
+    <script type="text/javascript">
+        var AssignedList = [];
+        var LoadedCustomerList = [];
+        var RootEmployee = "";
+        $(document).ready(function () {
+            $('#ddlSalesChannel, #ddlAllEmployee, #ddlZone, #ddlAssignableEmployee').select2();
+
+            $('input[type=radio][name=employeeType]').change(function () {
+                //alert("dd");
+                if (this.value == 'DNSM') {
+                    //alert("DNSM");
+                    $("#chan").hide();
+                    $("#zonee").hide();
+                    $("#addAll").hide();
+                    LoadEmployee("DNSM");
+                    LoadAssignableEmployee("ASM");
+                    AssignedList = [];
+                    LoadedCustomerList = [];
+                    GeneratedItemsTable();
+                }
+                else if (this.value == 'ASM') {
+                    $("#chan").hide();
+                    $("#zonee").hide();
+                    $("#addAll").hide();
+                    LoadEmployee("ASM");
+                    LoadAssignableEmployee("TSO");
+                    AssignedList = [];
+                    LoadedCustomerList = [];
+                    GeneratedItemsTable();
+                }
+                else if (this.value == 'TSO') {
+                    $("#chan").show();
+                    $("#zonee").show();
+                    $("#addAll").show();
+                    
+                    LoadEmployee("TSO");
+                    AssignedList = [];
+                    LoadedCustomerList = [];
+                    GeneratedItemsTable();
+
+                    $('#ddlAssignableEmployee').html('');
+                    var options = '';
+                    options += '<option value="">--Select assignable Employee or Customer--</option>';
+                    $('#ddlAssignableEmployee').append(options);
+
+                    //var channelID = $('#ddlSalesChannel').val().trim();
+                    //var ZoneID = $('#ddlZone').val().trim();
+                    //LoadAssignableCustomer(channelID, ZoneID);
+                }
+            });
+
+            $('#ddlZone').change(function () {
+                var channelID = $('#ddlSalesChannel').val().trim();
+                var ZoneID = $('#ddlZone').val().trim();
+                LoadAssignableCustomer(channelID, ZoneID);
+            });
+
+            //Add button click function
+            $('#addAll').click(function () {
+
+                //var EmployeeType = $("input[type='radio'][name='employeeType']:checked").val();
+                //alert(EmployeeType);
+                if (typeof $("input[type='radio'][name='employeeType']:checked").val() !== 'undefined') {
+                    var isValidItem = true;
+                    if ($('#ddlAllEmployee').val().trim() == '') {
+                        isValidItem = false;
+                        $('#ddlAllEmployee').siblings('span.error').show();
+                    }
+                    else {
+                        var EmployeeID = $('#ddlAllEmployee').val().trim();
+                        var EmployeeText = $("#ddlAllEmployee option:selected").text();
+                        RootEmployee = "";
+                        RootEmployee = EmployeeText;
+                        $('#ddlAllEmployee').siblings('span.error').css('display', 'none');
+                    }
+
+                    //if ($('#ddlAssignableEmployee').val().trim() == '') {
+                    //    isValidItem = false;
+                    //    $('#ddlAssignableEmployee').siblings('span.error').show();
+                    //}
+                    //else {
+                    //    var AssignedEmployeeOrCustomerID = $('#ddlAssignableEmployee').val().trim();
+                    //    var AssignedEmployeeOrCustomerText = $("#ddlAssignableEmployee option:selected").text();
+                    //    $('#ddlAssignableEmployee').siblings('span.error').css('display', 'none');
+                    //}
+
+                    if (isValidItem) {
+                        console.log("current", AssignedList);
+                        console.log("customer", LoadedCustomerList);
+                        if (LoadedCustomerList.length > 0) {
+                            $.each(LoadedCustomerList, function (i, val) {
+
+                                var isExixtsAssignedCustomerOrEmployee = checkIfObjectExist(AssignedList, val.CustomerName, val.CustomerID)
+                                if (isExixtsAssignedCustomerOrEmployee) {
+                                }
+                                else {
+                                    AssignedList.push({
+                                        EmployeeID: EmployeeID,
+                                        EmployeeText: EmployeeText,
+                                        AssignedEmployeeOrCustomerID: val.CustomerID,
+                                        AssignedEmployeeOrCustomerText: val.CustomerName,
+                                    });
+                                }
+                            });
+                        }
+
+                        
+                        $('#ddlAssignableEmployee').val("").change().focus();
+                        //$('#txtQTY').val("");
+                    }
+                    GeneratedItemsTable();
+                } else {
+                    notificationme("Please check employee type from checkbox first!", "info");
+                }
+
+            });
+            $('#add').click(function () {
+
+                //var EmployeeType = $("input[type='radio'][name='employeeType']:checked").val();
+                //alert(EmployeeType);
+                if (typeof $("input[type='radio'][name='employeeType']:checked").val() !== 'undefined') {
+                    var isValidItem = true;
+                    if ($('#ddlAllEmployee').val().trim() == '') {
+                        isValidItem = false;
+                        $('#ddlAllEmployee').siblings('span.error').show();
+                    }
+                    else {
+                        var EmployeeID = $('#ddlAllEmployee').val().trim();
+                        var EmployeeText = $("#ddlAllEmployee option:selected").text();
+                        RootEmployee = "";
+                        RootEmployee = EmployeeText;
+                        $('#ddlAllEmployee').siblings('span.error').css('display', 'none');
+                    }
+
+                    if ($('#ddlAssignableEmployee').val().trim() == '') {
+                        isValidItem = false;
+                        $('#ddlAssignableEmployee').siblings('span.error').show();
+                    }
+                    else {
+                        var AssignedEmployeeOrCustomerID = $('#ddlAssignableEmployee').val().trim();
+                        var AssignedEmployeeOrCustomerText = $("#ddlAssignableEmployee option:selected").text();
+                        $('#ddlAssignableEmployee').siblings('span.error').css('display', 'none');
+                    }
+
+                    if (isValidItem) {
+                        var isExixtsAssignedCustomerOrEmployee = checkIfObjectExist(AssignedList, AssignedEmployeeOrCustomerText, AssignedEmployeeOrCustomerID)
+                        if (isExixtsAssignedCustomerOrEmployee) {
+                            notificationme("You already added this [ " + AssignedEmployeeOrCustomerText + " ] Employee/Customer, Please Remove to update!", "info");
+                        }
+                        else {
+                            AssignedList.push({
+                                EmployeeID: EmployeeID,
+                                EmployeeText: EmployeeText,
+                                AssignedEmployeeOrCustomerID: AssignedEmployeeOrCustomerID,
+                                AssignedEmployeeOrCustomerText: AssignedEmployeeOrCustomerText,
+                            });
+                        }
+                        $('#ddlAssignableEmployee').val("").change().focus();
+                        //$('#txtQTY').val("");
+                    }
+                    GeneratedItemsTable();
+                } else {
+                    notificationme("Please check employee type from checkbox first!", "info");
+                }
+            });
+        });
+        function LoadAssignableEmployee(EmployeeType) {
+            //alert(EmployeeType);
+            if (EmployeeType != "") {
+                var obj = { "EmployeeType": EmployeeType};
+                    AjaxCall('@Url.Action("GetEmployeByType", "EmployeeInformation")', obj, 'POST').done(function (response) {
+                        if (response.length > 0) {
+                            //console.log(response);
+
+                            $('#ddlAssignableEmployee').html('');
+                            var options = '';
+                            options += '<option value="">--Select assignable Employee or Customer--</option>';
+                            for (var i = 0; i < response.length; i++) {
+                                options += '<option value="' + response[i].id + '">' + response[i].employeeName + '</option>';
+                            }
+                            $('#ddlAssignableEmployee').append(options);
+                        }
+                        else {
+                            $('#ddlAssignableEmployee').html('');
+                            var options = '';
+                            options += '<option value="">--Select assignable Employee or Customer--</option>';
+                            $('#ddlAssignableEmployee').append(options);
+                        }
+                    }).fail(function (error) {
+                        alert(error.StatusText);
+                    });
+                }
+                else {
+                    alert("Select Employee Type First");
+                }
+        }
+        function LoadAssignableCustomer(channel, Zone) {
+            //alert(EmployeeType);
+            if (channel != "" && Zone != "") {
+                var obj = { "channel": channel, "Zone": Zone};
+                    AjaxCall('@Url.Action("GetCustomerByChannelAndZone", "EmployeeInformation")', obj, 'POST').done(function (response) {
+                        if (response.length > 0) {
+                            //console.log(response);
+                            LoadedCustomerList = [];
+                            
+                            $('#ddlAssignableEmployee').html('');
+                            var options = '';
+                            options += '<option style="color:#2c19cb!important" value="">--Select assignable Employee or Customer--</option>';
+                            for (var i = 0; i < response.length; i++) {
+                                options += '<option value="' + response[i].id + '">' + response[i].customerName + '</option>';
+                                LoadedCustomerList.push({
+                                    CustomerID: response[i].id,
+                                    CustomerName: response[i].customerName
+                                });
+                            }
+                            $('#ddlAssignableEmployee').append(options);
+                            //console.log(LoadedCustomerList);
+                        }
+                        else {
+                            $('#ddlAssignableEmployee').html('');
+                            var options = '';
+                            options += '<option style="color:#2c19cb!important" value="">--Select assignable Employee or Customer--</option>';
+                            $('#ddlAssignableEmployee').append(options);
+                        }
+                    }).fail(function (error) {
+                        notificationme(error.StatusText, "error");
+                    });
+                }
+                else {
+                    notificationme("Select Channel and Zone First!", "info");
+                    //alert("Select Channel and Zone First");
+                    $('#ddlZone').val("");
+                    /*$("#ddlZone option").attr("selected", false);*/
+                }
+        }
+        function AjaxCall(url, data, type) {
+            return $.ajax({
+                url: url,
+                type: type,
+                data: data,
+                //contentType: 'application/json'
+            });
+        }
+        function LoadEmployee(EmployeeType) {
+            //alert(EmployeeType);
+            if (EmployeeType != "") {
+                var obj = { "EmployeeType": EmployeeType};
+                    AjaxCall('@Url.Action("GetEmployeByType", "EmployeeInformation")', obj, 'POST').done(function (response) {
+                        if (response.length > 0) {
+                            console.log(response);
+
+                            $('#ddlAllEmployee').html('');
+                            var options = '';
+                            options += '<option value="">--Select Employee--</option>';
+                            for (var i = 0; i < response.length; i++) {
+                                options += '<option value="' + response[i].id + '">' + response[i].employeeName + '</option>';
+                            }
+                            $('#ddlAllEmployee').append(options);
+                        }
+                        else {
+                            $('#ddlAllEmployee').html('');
+                            var options = '';
+                            options += '<option value="">--Select Employee--</option>';
+                            $('#ddlAllEmployee').append(options);
+                        }
+                    }).fail(function (error) {
+                        alert(error.StatusText);
+                    });
+                }
+                else {
+                    alert("Select Employee Type First");
+                }
+        }
+        function AjaxCall(url, data, type) {
+            return $.ajax({
+                url: url,
+                type: type,
+                data: data,
+                //contentType: 'application/json'
+            });
+        }
+        function checkIfObjectExist(AssignedList, text, id) {
+            //console.log(AssignedList);
+            if (AssignedList.length > 0) {
+                for (var i = 0; i < AssignedList.length; i++) {
+                    if (AssignedList[i].AssignedEmployeeOrCustomerText === text && AssignedList[i].AssignedEmployeeOrCustomerID === id) {
+                        return true;
+                    }
+                }
+            }
+            else {
+                return false;
+            }
+        }
+        function notificationme(messagess, typeofToast) {
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "preventDuplicates": true,
+                "onclick": null,
+                "showDuration": "100",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "show",
+                "hideMethod": "hide"
+            };
+            if (typeofToast == "error") {
+                toastr.error(messagess);
+            }
+            else if (typeofToast == "success") {
+                toastr.success(messagess);
+            }
+            else if (typeofToast == "info") {
+                toastr.info(messagess);
+            }
+        }
+        function GeneratedItemsTable() {
+            if (AssignedList.length > 0) {
+                var $table = $('<table id="datatable-fixed-header" class="table table-sm table-striped jambo_table" style="width:100%"/>');
+                $table.append('<thead style = "background-color: #053042; color: white;"><tr><th>Assign Employee/Customer for <span style="color: #ffbc57;">' + RootEmployee +'</span> </th><th></th></tr></thead>');
+                var $tbody = $('<tbody/>');
+                $.each(AssignedList, function (i, val) {
+                    var $row = $('<tr/>');
+                    /*$row.append($('<td/>').html(val.EmployeeText));*/
+                    $row.append($('<td/>').html(val.AssignedEmployeeOrCustomerText));
+                    var $remove = $('<a href="#"><i style="font-size: 17px; color:red;" class="fa fa-trash"></i></a>');
+                    $remove.click(function (e) {
+                        e.preventDefault();
+                        AssignedList.splice(i, 1);
+                        GeneratedItemsTable();
+                    });
+                    $row.append($('<td/>').html($remove));
+                    $tbody.append($row);
+                });
+                //console.log("current", AssignedList);
+                $table.append($tbody);
+                $('#AssignedList').html($table);
+            }
+            else {
+                $('#AssignedList').html('');
+            }
+        }
+    </script>
+}
+

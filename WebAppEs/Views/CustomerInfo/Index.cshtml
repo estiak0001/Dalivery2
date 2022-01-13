@@ -1,0 +1,86 @@
+﻿@model IEnumerable<WebAppEs.ViewModel.Customer.MobileRND_CustomerInfo_VM>
+@{ ViewData["Title"] = "Customer List"; }
+<div class="x_panel shadow p-3 mb-5 bg-white rounded">
+    <div class="container">
+        <div class="x_title">
+            <h2>List of Customer</h2>
+            <div class="nav navbar-right panel_toolbox">
+                <a style="float:right" class="btn btn-info" asp-action="CreateCustomer"> <i class="fa fa-plus pr-2"></i> Create New</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card-box table-responsive">
+                        <table id="tableLoad" class="table table-sm  dt-responsive nowrap" cellspacing="0" width="100%">
+                            <thead style="background-color: #d7e3ef;">
+                                <tr>
+                                    <th>Customer No.</th>
+                                    <th> Name</th>
+                                    <th>Salse Channel</th>
+                                    <th>Zone</th>
+                                    <th>Product</th>
+                                    <th>Brand</th>
+                                    <th>Address</th>
+                                    <th>Delivery Address</th>
+                                    <th>Phone</th>
+                                    <th style="text-align:center">Action's</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CustomerNo)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CustomerName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.SalseChannelName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ZoneName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Product)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Brand)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Address)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DeliveryAddress)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PhoneNo)
+                                        </td>
+
+                                        <td style="text-align:center">
+                                            <a style=" font-size: large; color: blue;" asp-action="CreateCustomer" asp-controller="CustomerInfo" asp-route-id="@item.Id"><i class="fa fa-edit"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#tableLoad').DataTable(
+                {
+                    "pageLength": 50
+                });
+        });
+    </script>
+}

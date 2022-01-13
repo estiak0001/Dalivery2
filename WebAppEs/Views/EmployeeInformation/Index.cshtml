@@ -1,0 +1,99 @@
+﻿@model IEnumerable<WebAppEs.ViewModel.EmployeeInformation.MobileRND_EmployeeInformation_VM>
+@{ ViewData["Title"] = "Employee List"; }
+<div class="x_panel shadow p-3 mb-5 bg-white rounded">
+    <div class="container">
+        <div class="x_title">
+            <h2 style="color: #05445e; font-weight: bolder;">List of Employee</h2>
+            <div class="nav navbar-right panel_toolbox">
+                <a style="float:right" class="btn btn-info" asp-action="CreateEmployee"> <i class="fa fa-plus pr-2"></i> Create New</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card-box table-responsive">
+                        <table id="tableLoad" class="table table-sm  dt-responsive nowrap" cellspacing="0" width="100%">
+                            <thead style="background-color: #d7e3ef;">
+                                <tr>
+                                    <th>
+                                        Employ ID
+                                    </th>
+                                    <th>
+                                        Employr Name
+                                    </th>
+                                    <th>
+                                        Contact Number
+                                    </th>
+                                    @*<th>
+                                            Sales Channel
+                                        </th>*@
+                                    @*<th>
+                                            Zone
+                                        </th>*@
+                                    <th>
+                                        Brand
+                                    </th>
+                                    <th>
+                                        Employee Type
+                                    </th>
+                                    @*<th>
+                                            Assin Customer Number
+                                        </th>*@
+                                    <th style="text-align:center">Action's</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.EmployeeID)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.EmployeeName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ContactNumber)
+                                        </td>
+                                        @*<td>
+                                                @Html.DisplayFor(modelItem => item.SalseChannelName)
+                                            </td>*@
+                                        @*<td>
+                                                @Html.DisplayFor(modelItem => item.ZoneName)
+                                            </td>*@
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Brand)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.EmployeeType)
+                                        </td>
+                                        @*<td>
+                                                @Html.DisplayFor(modelItem => item.AssignedCustomer)
+                                            </td>*@
+
+
+                                        <td style="text-align:center">
+                                            <a style=" font-size: large; color: blue;" asp-action="CreateEmployee" asp-route-id="@item.Id"><i class="fa fa-edit"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#tableLoad').DataTable(
+                {
+                    "pageLength": 50
+                });
+        });
+    </script>
+}

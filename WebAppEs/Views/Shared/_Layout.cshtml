@@ -1,0 +1,156 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewData["Title"] - DELIVERY SYSTEM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400&display=swap" rel="stylesheet">
+    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" />*@
+    <partial name="Gentelella/_Styles" />
+    @*<style>
+            input[type=checkbox] {
+                -ms-transform: scale(2);
+                -moz-transform: scale(2);
+                -webkit-transform: scale(2);
+                -o-transform: scale(2);
+                transform: scale(2);
+                padding: 10px;
+            }
+        </style>*@
+    <style>
+        body {
+            font-family: 'CircularStd', sans-serif;
+            color: black !important;
+        }
+
+        .nav.child_menu li:hover, .nav.child_menu li.active {
+            background-color: rgb(255 255 255 / 20%);
+        }
+
+        .nav-md ul.nav.child_menu li:before {
+            background: #ffffff;
+            bottom: auto;
+            content: "";
+            height: 8px;
+            left: 23px;
+            margin-top: 15px;
+            position: absolute;
+            right: auto;
+            width: 8px;
+            z-index: 1;
+            border-radius: 50%;
+        }
+
+        .nav-md ul.nav.child_menu li:after {
+            border-left: 1px solid #8b8f93;
+            bottom: 0;
+            content: "";
+            left: 27px;
+            position: absolute;
+            top: 0;
+        }
+    </style>
+</head>
+<body style="background-color: #05445E !important " class="nav-md">
+    <div class="container body">
+        <div class="main_container">
+            <div class="col-md-3 left_col" style="background-color: #05445E !important ">
+                <div style="background-color: #05445E !important " class="left_col scroll-view">
+                    <div class="navbar nav_title" style="background-color: #05445e; border: 0px;">
+                        <a style="font-size: 14px;" href="/Home/Index" class="site_title">
+                            <img class="" style="height:34px; width:52px; margin:0px" src="~/Logo/logo2.png" /> <span style="color: white; font-weight: 600;">&nbsp; &nbsp; DELIVERY SYSTEM</span>
+                        </a>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <!-- menu profile quick info -->
+                    @*<div class="profile clearfix">
+                            <div class="profile_pic">
+                                <img src="~/build/images/User_Avatar_2.png" alt="..." class="img-circle profile_img">
+                            </div>
+                            <div style="padding: 39px 10px 10px; width: 65%; float: left; ">
+
+                                <span style="color: bisque;">@HttpContextAccessor.HttpContext.Session.GetString("Name")</span>
+                            </div>
+                        </div>*@
+                    <!-- /menu profile quick info -->
+                    <br />
+                    <!-- sidebar menu -->
+                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                        @await Component.InvokeAsync("NavigationMenu")
+                    </div>
+
+                    <!-- /sidebar menu -->
+                    <!-- /menu footer buttons -->
+                    <div class="sidebar-footer hidden-small">
+                        <!--<a data-toggle="tooltip" data-placement="top" title="Settings">-->
+                        @*<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>*@
+                        <!--</a>
+                        <a data-toggle="tooltip" data-placement="top" title="FullScreen">-->
+                        @*<span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>*@
+                        <!--</a>
+                        <a data-toggle="tooltip" data-placement="top" title="Lock">-->
+                        @*<span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>*@
+                        <!--</a>
+                        <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
+                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                        </a>-->
+                    </div>
+                    <!-- /menu footer buttons -->
+                </div>
+            </div>
+
+            <!-- top navigation -->
+            <div class="top_nav">
+                <div style="background-color: #053042" class="nav_menu">
+                    <div class="nav toggle">
+                        <a style="color:white" id="menu_toggle"><i class="fa fa-bars"></i></a>
+                    </div>
+                    <nav class="nav navbar-nav">
+                        <ul style="margin-right: 70px;" class=" navbar-right">
+
+                            <partial name="_LoginPartial" />
+
+                            <li style="margin-right: 10px;" class="nav-item dropdown open">
+                                <a style="color: #ffffff !important;" href="/Identity/Account/Manage" class="user-profile" aria-haspopup="true" id="navbarDropdown" aria-expanded="false">
+                                    <img src="~/build/images/UserAvatar.png" />@HttpContextAccessor.HttpContext.Session.GetString("Name")
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- /top navigation -->
+            <!-- page content -->
+            <div class="right_col" role="main">
+                <div class="">
+                    @RenderBody()
+                </div>
+            </div>
+            <!-- /page content -->
+            <!-- footer content -->
+            <footer class="footer_fixed" style="background-color: #080808; color: wheat; font-size: medium;">
+                <div class="pull-right">
+                    Developed By - Software Department Section (Mobile R&D)
+                </div>
+                <div class="clearfix"></div>
+            </footer>
+            <!-- /footer content -->
+        </div>
+    </div>
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>*@
+    <partial name="Gentelella/_Scripts" />
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
