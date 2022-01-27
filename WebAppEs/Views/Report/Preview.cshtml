@@ -1,0 +1,240 @@
+﻿@model WebAppEs.ViewModel.ReportPannel.Preview
+@inject IJsonHelper Json;
+@{
+    ViewData["Title"] = "Preview";
+}
+<style>
+    .rreedd {
+        color: red;
+    }
+
+    label {
+        font-size: 14px;
+        font-weight: bold;
+    }
+</style>
+
+<div class="x_panel">
+    <div class="x_title">
+        <h2 style="color: #05445e; font-weight: bolder;">Report Preview</h2>
+        <div class="clearfix"><a style="float: right;" class="btn btn-sm btn-dark" >Export</a></div>
+    </div>
+    <div class="x_content">
+        <br />
+        <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+            <div class="row">
+                <div class="col-md-2 col-sm-2  form-group has-feedback">
+                    <label style="padding-left: 10px;">From Date</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <input type="date" class="form-control has-feedback-left" id="txtFromDate" placeholder="From Date">
+                            <span class="fa fa-calendar form-control-feedback left" aria-hidden="true"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-2  form-group has-feedback">
+                    <label style="padding-left: 10px;">To Date</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <input type="date" class="form-control has-feedback-left" id="txtToDate" placeholder="From Date">
+                            <span class="fa fa-calendar form-control-feedback left" aria-hidden="true"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-2  form-group has-feedback">
+                    <label style="padding-left: 10px;">Payment Type</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <select asp-for="PaymentType" id="ddlPayment" class="form-control">
+                                <option value="">--Select Payment Type--</option>
+                                @foreach (var item in Model.paymentTypeList)
+                                {
+                                    <option value="@item.Id">@item.TypeName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-2  form-group has-feedback">
+                    <label style="padding-left: 10px;">Courier</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <select asp-for="CourierID" id="ddlCourier" class="form-control">
+                                <option value="">--Select Courier--</option>
+                                @foreach (var item in Model.CourierList)
+                                {
+                                    <option value="@item.Id">@item.CourierName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-2  form-group has-feedback">
+                    <label style="padding-left: 10px;">Status</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <select id="ddlStatus" class="form-control">
+                                <option value="">--Select Status--</option>
+                                <option value="yes">Delivered</option>
+                                <option value="no">Undelivered</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2 col-sm-2  form-group has-feedback">
+                    <label style="padding-left: 10px;">Customer</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <select asp-for="CustomerId" id="ddlCustomer" class="form-control">
+                                <option style="color: #8d9195!important" value="">--Select Customer--</option>
+                                @foreach (var item in Model.CustomerList)
+                                {
+                                    <option value="@item.Id">@item.CustomerName (@item.CustomerNo)</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ln_solid"></div>
+            <div class="form-group row">
+                <div style="text-align:center" class="col-md-12 col-sm-12">
+                    <button style="float:right" id="previewdata" type="button" class="btn btn-info">Preview</button>
+                </div>
+            </div>
+        </form>
+
+        <div style="width:100%!important; padding-left:20px;" class="row">
+            @*<div style="padding: 15px; padding: 15px; font-size: 20px;">Total Quantity: <span class="badge badge-info totalqty">0</span> Total Amount: <span class="badge badge-info totalamount">0</span></div>*@
+            <div style="width:100%!important" class="" id="DetailsData">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        var dataList = [];
+        $(document).ready(function () {
+            $('#ddlCustomer').select2();
+
+            $('#previewdata').click(function () {
+                var FromDate = $('#txtFromDate').val();
+                var ToDate = $('#txtToDate').val();
+                var PaymentType = $('#ddlPayment').val();
+                var CourierID = $('#ddlCourier').val();
+                var Status = $('#ddlStatus').val();
+                var CoustomerID = $('#ddlCustomer').val();
+
+                if (FromDate != "" && ToDate != "") {
+                    var obj = { "FromDate": FromDate, "ToDate": ToDate, "PaymentType": PaymentType, "CourierID": CourierID, "Status": Status, "CoustomerID": CoustomerID };
+                    AjaxCall('@Url.Action("GetPreviewData", "Report")', obj, 'POST').done(function (result) {
+                        console.log(result);
+                        dataList = [];
+                        for (var h = 0; h < result.length; h++) {
+                            dataList.push({
+                                amout: result[h].amout,
+                                area: result[h].area,
+                                bookingDate: result[h].bookingDateString,
+                                brand: result[h].brand,
+                                cnNumber: result[h].cnNumber,
+                                courierID: result[h].courierID,
+                                courierName: result[h].courierName,
+                                customerId: result[h].customerId,
+                                customerNameWithID: result[h].customerNameWithID,
+                                deliveredDateTime: result[h].deliveredDateTime,
+                                paymentType: result[h].paymentType,
+                                quantity: result[h].quantity,
+                                rate: result[h].rate,
+                                remarks: result[h].remarks,
+                                doNo: result[h].doNo,
+                                status: result[h].status,
+                            });
+                        }
+                        console.log(dataList);
+                        GeneratedItemsTable();
+                    }).fail(function (error) {
+                        alert(error.StatusText);
+                    });
+                }
+
+                else {
+                    alert("Please provide date range first!");
+                }
+
+            });
+        });
+
+        function AjaxCall(url, data, type) {
+            return $.ajax({
+                url: url,
+                type: type,
+                data: data,
+                //contentType: 'application/json'
+            });
+        }
+
+        function GeneratedItemsTable() {
+            if (dataList.length > 0) {
+
+                dataList.sort(function (a, b) {
+                    return parseInt(b.cnNumber) - parseInt(a.cnNumber);
+                });
+
+                var $table = $('<table style="" id="tempTable" class="table table-sm table-striped table-bordered" style="width:100%"/>');
+                $table.append('<thead style = "background-color: #323232; color: white;"><tr><th style="background-color: darkred;">B. Date</th><th>Customer</th><th>DO No.</th><th>Courier</th><th>Area</th><th>Brand</th><th style="background-color: darkred;">CN No.</th><th>Qty.</th><th>Amount</th><th>Rate</th><th>Remarks</th><th>D. DateTime</th><th>D. Status</th></tr></thead>');
+                var $tbody = $('<tbody/>');
+
+                var totalquantity = 0;
+                var amount = 0;
+
+                $.each(dataList, function (i, val) {
+
+                    //totalquantity += Number(val.Quantity);
+                    //amount += Number(val.Ammount);
+
+                    var $row = $('<tr/>');
+                    $row.append($('<td/>').html(val.bookingDate));
+                    $row.append($('<td/>').html(val.customerNameWithID));
+                    $row.append($('<td/>').html(val.doNo));
+                    $row.append($('<td/>').html(val.courierName));
+                    $row.append($('<td/>').html(val.area));
+                    $row.append($('<td/>').html(val.brand));
+                    $row.append($('<td/>').html(val.cnNumber));
+                    $row.append($('<td/>').html(val.quantity));
+                    $row.append($('<td/>').html(val.amout));
+                    $row.append($('<td/>').html(val.rate));
+                    $row.append($('<td/>').html(val.remarks));
+                    $row.append($('<td/>').html(val.deliveredDateTime));
+                    var $status;
+                    if (val.status == "Undelivered") {
+                        $status = $('<label class="badge badge-warning"> ' + val.status + ' </label>');
+                    }
+                    else {
+                        $status = $('<label class="badge badge-success "> ' + val.status + ' </label>');
+                    }
+
+                    $row.append($('<td/>').html($status));
+                    $tbody.append($row);
+                });
+
+                //console.log("current", DetailsData);
+                $table.append($tbody);
+                $('#DetailsData').html($table);
+
+                $('#tempTable').DataTable({
+                    "ordering": false,
+                    pageLength: 50,
+                });
+
+            }
+            else {
+                $('#DetailsData').html('');
+            }
+        }
+    </script>
+}
+

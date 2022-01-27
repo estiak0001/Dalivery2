@@ -7,6 +7,7 @@ using WebAppEs.ViewModel.Home;
 using WebAppEs.ViewModel.Register;
 using WebAppEs.ViewModel.Booking;
 using WebAppEs.Entity;
+using WebAppEs.ViewModel.ReportPannel;
 
 namespace WebAppEs.Services
 {
@@ -29,5 +30,6 @@ namespace WebAppEs.Services
 
 		MobileRND_BookingEntry_VM BookingHeadByID(Guid Id);
 		List<MobileRND_BookingDetailsEntry_VM> BokkingDetailByHead(Guid BookingId);
-	}
+        List<PreviewDataModel> PreviewReportData(DateTime? FromDate, DateTime? ToDate, Guid PaymentType, Guid CourierID, string Status, Guid CoustomerID);
+    }
 }

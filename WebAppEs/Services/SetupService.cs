@@ -97,7 +97,6 @@ namespace WebAppEs.Services
                     Address = viewModel.Address,
                     DeliveryAddress = viewModel.DeliveryAddress,
                     PhoneNo = viewModel.PhoneNo,
-
                 });
                 result = _context.SaveChanges();
             }

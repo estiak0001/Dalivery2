@@ -96,7 +96,7 @@
                         </div>
                     </div>
                     <div class="col-md-2 col-sm-2  form-group has-feedback">
-                        <label style="padding-left: 10px;">Courier Type</label>
+                        <label style="padding-left: 10px;">Area</label>
                         <div class="item form-group">
                             <div class="col-md-12 col-sm-12 ">
                                 <select id="ddlCourierType" class="form-control">
@@ -180,7 +180,7 @@
                             </div>
                         </div>
                     </div>
-                    <div style="text-align: center; padding: 0px;" class="col-md-2 col-sm-2  form-group has-feedback">
+                    <div style="text-align: center; padding: 0px;" class="col-md-1 col-sm-1  form-group has-feedback">
                         <label style="padding-left: 10px;">Customer No.</label>
                         <div class="item form-group">
                             <div class="col-md-12 col-sm-12 ">
@@ -189,11 +189,20 @@
                             </div>
                         </div>
                     </div>
-                    <div style="text-align: center; padding: 0px;" class="col-md-3 col-sm-3  form-group has-feedback">
+                    <div style="text-align: center; padding: 0px;" class="col-md-2 col-sm-2  form-group has-feedback">
                         <label style="padding-left: 10px;">Customer Name</label>
                         <div class="item form-group">
                             <div class="col-md-12 col-sm-12 ">
-                                <label type="text" class="form-control form-control-sm customernamefromontype" id="" placeholder=""></label>
+                                <label type="text" class="form-control form-control-sm customernamefromontype" id="customerNamelabel" placeholder=""></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; padding: 0px;" class="col-md-2 col-sm-2  form-group has-feedback">
+                        <label style="padding-left: 10px;">DO No.</label>
+                        <div class="item form-group">
+                            <div class="col-md-12 col-sm-12 ">
+                                <input tabindex="5" type="text" class="form-control form-control-sm details" id="details7" placeholder="DO No.">
+                                <span class="error">Enter DO No.!</span>
                             </div>
                         </div>
                     </div>
@@ -201,7 +210,7 @@
                         <label style="padding-left: 10px;">Remarks</label>
                         <div class="item form-group">
                             <div class="col-md-12 col-sm-12 ">
-                                <textarea type="text" class="form-control form-control-sm details" id="details6" placeholder="Remarks/Note"></textarea>
+                                <textarea style="height: 48px;" tabindex="6" type="text" class="form-control form-control-sm details" id="details6" placeholder="Remarks/Note"></textarea>
                             </div>
                         </div>
                     </div>
@@ -209,7 +218,27 @@
                 <div style="text-align:center">
                     <input type="button" class="btn btn-sm btn-success" id='addDetails' value='Add' />
                 </div>
+                <div>
+                    <div class="row">
+                        <div class="col-md-2">
+
+                        </div>
+                        <div style="border: 2px solid; border-radius: 7px; margin-right: 4px;" class="col-md-3">
+                            <h4 style="text-align: center; margin: 4px; ">C.Name: <strong style="color: darkmagenta;" class="cname"></strong></h4>
+                        </div>
+                        <div style="border: 2px solid; border-radius: 7px; margin-right: 4px;" class="col-md-2">
+                            <h4 style="text-align: center; margin: 4px; "><strong style="color: #527b09;" class="bdate"></strong></h4>
+                        </div>
+                        <div style="border: 2px solid; border-radius: 7px; margin-right: 4px;" class="col-md-3">
+                            <h4 style="text-align: center; margin: 4px; ">Brand: <strong style="color: blue;" class="bname"></strong></h4>
+                        </div>
+                        <div class="col-md-2">
+
+                        </div>
+                    </div>
+                </div>
                 <div style="width:100%!important; padding-left:20px;" class="row">
+                    <div style="padding: 15px; padding: 15px; font-size: 20px;">Total Quantity: <span class="badge badge-info totalqty">0</span> Total Amount: <span class="badge badge-info totalamount">0</span></div>
                     <div style="width:100%!important" class="" id="DetailsData">
                     </div>
                 </div>
@@ -243,7 +272,7 @@
 
         if (LoadEiditData != null) {
             if (LoadEiditData.length != 0) {
-                    faultsItem = [];
+                DetailsData = [];
                 for (var h = 0; h < LoadEiditData.length; h++) {
 
                     console.log(LoadEiditData[h].analysisType);
@@ -255,7 +284,9 @@
                         Rate: parseFloat(parseFloat(LoadEiditData[h].rate).toFixed(2)),
                         CourierType: LoadEiditData[h].courierType,
                         CustomerNo: LoadEiditData[h].customerNo,
+                        CustomerNameWithNo: LoadEiditData[h].customerNameWithNo,
                         Remarks: LoadEiditData[h].remarks,
+                        DoNo: LoadEiditData[h].doNo,
                     });
                 }
                 console.log(DetailsData);
@@ -264,6 +295,15 @@
         }
 
         $(document).ready(function () {
+
+            $('.cname').text($("#ddlCourier option:selected").text());
+            $('.bname').text($("#ddlBrand option:selected").text());
+
+            var date = new Date($("#txtBookingDate").val());
+
+            var dateformat = (((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear());
+
+            $('.bdate').text(dateformat);
 
             $('.details').keyup(function (e) {
                 if (e.keyCode == 13) {
@@ -329,6 +369,8 @@
                 }
             });
             $('#ddlCourier').on("change", function () {
+                DropDownChangeData();
+                $('.cname').text($("#ddlCourier option:selected").text());
                 var Couriertype = $('#ddlCourierType').val();
                 var CourierID = $('#ddlCourier').val();
                 if (Couriertype != "") {
@@ -354,34 +396,7 @@
                     $('#details4').val("");
                 }
             });
-            $('#ddlCourierType').on("change", function () {
-                var Couriertype = $('#ddlCourierType').val();
-                var CourierID = $('#ddlCourier').val();
-                if (CourierID != "") {
-                    if (Couriertype != "") {
-                        var obj = { "CourierID": CourierID, "Couriertype": Couriertype };
-                        AjaxCall('@Url.Action("GetRate", "BookingEntry")', obj, 'POST').done(function (response) {
-                            if (response.rate != "") {
-                                console.log(response.rate);
-                                $('#details4').val(response.rate);
-                            }
-                            else {
-                                $('#details4').val("");
-                            }
-                        }).fail(function (error) {
-                            alert(error.StatusText);
-                        });
-                    }
-                    else {
-                        $('#details4').val("");
-                    }
-                }
-                else {
-                    alert("Select Courier First");
-                    $('#ddlCourierType').val("");
-                    $('#details4').val("");
-                }
-            });
+
             $('.quantitycalc').keyup(function () {
                 //alert("0")
                 var val1 = $("#details2").val(),
@@ -395,36 +410,21 @@
                 $("#details4").val(parseFloat((Number(val2) / Number(val1))).toFixed(2));
             });
             $('.customertype').keyup(function () {
-                IsCustomerValid = false;
-                var CustomerNo = $('#details5').val();
-
-                if (CustomerNo != "") {
-                    var obj = { "CustomerNo": CustomerNo};
-                        AjaxCall('@Url.Action("GetCustomer", "BookingEntry")', obj, 'POST').done(function (response) {
-                            if (response != null) {
-                                console.log(response.customerName);
-                                $('.customernamefromontype').text(response.customerName);
-                                $('.customernamefromontype').prop('title', response.customerName);
-                                IsCustomerValid = true;
-                            }
-                            else {
-                                $('.customernamefromontype').text("");
-                                $('.customernamefromontype').prop('title', "");
-                                IsCustomerValid = false;
-                            }
-                        }).fail(function (error) {
-                            alert(error.StatusText);
-                            IsCustomerValid = false;
-                        });
-                    }
-                    else {
-                    $('.customernamefromontype').text("");
-                    $('.customernamefromontype').prop('title', "");
-                        IsCustomerValid = false;
-                    }
+                GetCustomerNameOnKeyUp();
             });
 
+            $('#ddlBrand').on("change", function () {
+                $('.bname').text($("#ddlBrand option:selected").text());
+                DropDownChangeData();
+            });
+            $('#txtBookingDate').on("change", function () {
+                DropDownChangeData();
+                var date = new Date($("#txtBookingDate").val());
 
+                var dateformat = (((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear());
+
+                $('.bdate').text(dateformat);
+            });
 
             $('#submitData').click(function () {
                 //validation of save
@@ -517,7 +517,51 @@
                     });
                 }
             });
+
+            $('#ddlPayment, #ddlProduct').on('change', function () {
+                DropDownChangeData();
+            });
         });
+
+        function DropDownChangeData() {
+                var data = {
+                    Date: $('#txtBookingDate').val().trim(),
+                    PaymentType: $('#ddlPayment').val().trim(),
+                    Courier: $('#ddlCourier').val().trim(),
+                    Brand: $('#ddlBrand').val().trim(),
+                    product: $('#ddlProduct').val().trim(),
+                    }
+                    $.ajax({
+                        data: data,
+                        url: '@Url.Action("LoadIsExistDaa", "BookingEntry")',
+                        type: 'GET',
+                        dataType: "JSON",
+                        contentType: "application/json",
+                        success: function (result) {
+                            //console.log(result);
+                            DetailsData = [];
+                            if (result.bookingDetails != null) {
+                                DetailsData = [];
+                                if (result.bookingDetails.length != 0) {
+                                    for (var h = 0; h < result.bookingDetails.length; h++) {
+
+                                        DetailsData.push({
+                                            CNNumber: result.bookingDetails[h].cnNumber,
+                                            Quantity: parseInt(result.bookingDetails[h].quantity),
+                                            Ammount: result.bookingDetails[h].ammount,
+                                            Rate: parseFloat(parseFloat(result.bookingDetails[h].rate).toFixed(2)),
+                                            CourierType: result.bookingDetails[h].courierType,
+                                            CustomerNo: result.bookingDetails[h].customerNo,
+                                            Remarks: result.bookingDetails[h].remarks,
+                                        });
+                                    }
+                                }
+                            }
+                            console.log(DetailsData);
+                            GeneratedItemsTable();
+                        }
+                    });
+            }
 
         function AjaxCall(url, data, type) {
             return $.ajax({
@@ -620,7 +664,7 @@
                 $('#details5').siblings('span.error').css('visibility', 'hidden');
             }
 
-
+            var customerName = $("#customerNamelabel").text();
 
             if (isValidItem) {
                 var isExixtsSubCategory = checkIfObjectExist(DetailsData, CNNumber)
@@ -636,10 +680,13 @@
                         Rate: parseFloat(parseFloat(Rate).toFixed(2)),
                         CourierType: CourierType,
                         CustomerNo: CustomerNo,
+                        CustomerNameWithNo: customerName + " (" + CustomerNo + ")",
                         Remarks: $('#details6').val().trim(),
+                        DoNo: $('#details7').val().trim(),
                     });
                     $('[tabindex=1]').focus();
-                    $('#details1, #details2,#details3,#details5,#details6').val("");
+                    $('#details1, #details2,#details3,#details5,#details6,#details7, #customerNamelabel').val("");
+                    $('#customerNamelabel').text("");
                     $('#details4').val(RateValue);
                     $('#details1').val(parseInt(CNNumber) + 1)
                 }
@@ -650,6 +697,35 @@
                 $('[tabindex=1]').focus();
             }
 
+        }
+        function GetCustomerNameOnKeyUp() {
+            IsCustomerValid = false;
+                var CustomerNo = $('#details5').val();
+
+                if (CustomerNo != "") {
+                    var obj = { "CustomerNo": CustomerNo};
+                        AjaxCall('@Url.Action("GetCustomer", "BookingEntry")', obj, 'POST').done(function (response) {
+                            if (response != null) {
+                                console.log(response.customerName);
+                                $('.customernamefromontype').text(response.customerName);
+                                $('.customernamefromontype').prop('title', response.customerName);
+                                IsCustomerValid = true;
+                            }
+                            else {
+                                $('.customernamefromontype').text("");
+                                $('.customernamefromontype').prop('title', "");
+                                IsCustomerValid = false;
+                            }
+                        }).fail(function (error) {
+                            alert(error.StatusText);
+                            IsCustomerValid = false;
+                        });
+                    }
+                    else {
+                    $('.customernamefromontype').text("");
+                    $('.customernamefromontype').prop('title', "");
+                        IsCustomerValid = false;
+                    }
         }
         function checkIfObjectExist(arr, id) {
             console.log(id);
@@ -672,16 +748,25 @@
                 });
 
                 var $table = $('<table style="text-align: center;" id="tempTable" class="table table-sm table-striped table-bordered" style="width:100%"/>');
-                $table.append('<thead style = "background-color: #323232; color: white;"><tr><th style="background-color: darkred;">CN No.</th><th>Quantity</th><th>Amount</th><th>Rate</th><th>Courier Type</th><th style="background-color: darkred;">Customer No.</th><th>Remarks</th><th>Edit</th><th></th></tr></thead>');
+                $table.append('<thead style = "background-color: #323232; color: white;"><tr><th style="background-color: darkred;">CN No.</th><th>Quantity</th><th>Amount</th><th>Rate</th><th>Area</th><th style="background-color: darkred;width:20%;">Customer</th><th>DO No.</th><th style="width:15%">Remarks</th><th>Edit</th><th></th></tr></thead>');
                 var $tbody = $('<tbody/>');
+
+                var totalquantity = 0;
+                var amount = 0;
+
                 $.each(DetailsData, function (i, val) {
+
+                    totalquantity += Number(val.Quantity);
+                    amount += Number(val.Ammount);
+
                     var $row = $('<tr/>');
                     $row.append($('<td/>').html(val.CNNumber));
                     $row.append($('<td/>').html(val.Quantity));
                     $row.append($('<td/>').html(val.Ammount));
                     $row.append($('<td/>').html(val.Rate));
                     $row.append($('<td/>').html(val.CourierType));
-                    $row.append($('<td/>').html(val.CustomerNo));
+                    $row.append($('<td/>').html(val.CustomerNameWithNo));
+                    $row.append($('<td/>').html(val.DoNo));
                     $row.append($('<td/>').html(val.Remarks));
                     var $edit = $('<a href="#"><i style="font-size: 17px; color:#3800ff;" class="fa fa-edit"></i></a>');
                     $edit.click(function (e) {
@@ -693,12 +778,13 @@
                         $('#details3').val(DetailsData[i].Ammount);
                         $('#details4').val(DetailsData[i].Rate);
                         $('#details5').val(DetailsData[i].CustomerNo);
-
+                        $('#details7').val(DetailsData[i].DoNo);
+                        $('#details6').val(DetailsData[i].Remarks);
                         $('#ddlCourierType').val(DetailsData[i].CourierType);
                         $('[tabindex=1]').focus();
                         //DetailsData.splice(i, 1);
                         //GeneratedItemsTable();
-                        
+                        GetCustomerNameOnKeyUp();
                         DetailsData.splice(i, 1);
                         GeneratedItemsTable();
                     });
@@ -713,6 +799,10 @@
                     $row.append($('<td/>').html($remove));
                     $tbody.append($row);
                 });
+
+                $('.totalqty').text(totalquantity);
+                $('.totalamount').text(amount);
+
                 //console.log("current", DetailsData);
                 $table.append($tbody);
                 $('#DetailsData').html($table);
@@ -721,7 +811,7 @@
                     "ordering": false,
                     pageLength: 50,
                 });
-                
+
             }
             else {
                 $('#DetailsData').html('');

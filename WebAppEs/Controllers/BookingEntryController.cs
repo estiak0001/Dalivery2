@@ -86,6 +86,24 @@ namespace WebAppEs.Controllers
         }
 
 
+        public JsonResult LoadIsExistDaa(DateTime Date, string PaymentType, string Courier, string Brand, string product)
+        {
+        
+
+        Guid GuidPaymentType = PaymentType == null ? Guid.Empty : Guid.Parse(PaymentType);
+            Guid GuidCourier = Courier == null ? Guid.Empty : Guid.Parse(Courier);
+            Guid GuidBrand = Brand == null ? Guid.Empty : Guid.Parse(Brand);
+            Guid Guidproduct = product == null ? Guid.Empty : Guid.Parse(product);
+            var result = _dataAccessService.BookingDatabyHead(Date, GuidPaymentType, GuidCourier, GuidBrand, Guidproduct);
+            MobileRND_BookingEntry_VM headWiseData = new MobileRND_BookingEntry_VM();
+            if (result != null)
+            {
+                headWiseData = result;
+                headWiseData.bookingDetails = _dataAccessService.BokkingDetailByHead(result.Id);
+            }
+            return Json(headWiseData);
+        }
+
         [HttpPost]
         //[ValidateAntiForgeryToken]
         //[AllowAnonymous]

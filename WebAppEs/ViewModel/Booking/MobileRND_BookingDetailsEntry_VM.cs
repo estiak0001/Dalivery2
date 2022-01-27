@@ -14,11 +14,11 @@ namespace WebAppEs.ViewModel.Booking
         public decimal Ammount { get; set; }
         public decimal Rate { get; set; }
         public string CourierType { get; set; }
-
+        public string CustomerNameWithNo { get; set; }
         public string CustomerNo { get; set; }
         public Guid CustomerID { get; set; }
         public string Remarks { get; set; }
-
+        public string DoNo { get; set; }
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedOn { get; set; }
         public Guid LUser { get; set; }

@@ -41,7 +41,13 @@ namespace WebAppEs.Entity
         [StringLength(150)]
         public string CustomerNo { get; set; }
 
+        public bool IsDelivered { get; set; }
+        public DateTime? DeliveredDateTime { get; set; }
+
         public string Remarks { get; set; }
+
+        [StringLength(250)]
+        public string DoNo { get; set; }
 
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedOn { get; set; }

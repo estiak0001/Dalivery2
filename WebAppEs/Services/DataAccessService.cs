@@ -11,6 +11,7 @@ using WebAppEs.ViewModel.Home;
 using WebAppEs.ViewModel.Register;
 using WebAppEs.ViewModel.Booking;
 using WebAppEs.Entity;
+using WebAppEs.ViewModel.ReportPannel;
 
 namespace WebAppEs.Services
 {
@@ -216,6 +217,7 @@ namespace WebAppEs.Services
 					CourierType = viewModel.CourierType,
 					CustomerNo = viewModel.CustomerNo,
 					Remarks = viewModel.Remarks,
+					DoNo = viewModel.DoNo,
 					UpdatedOn = DateTime.Today,
 					LUser = viewModel.LUser
 				});
@@ -287,6 +289,7 @@ namespace WebAppEs.Services
         public MobileRND_BookingEntry_VM BookingHeadByID(Guid Id)
         {
 			var items = (from booking in _context.MobileRND_BookingEntry.Where(x => x.Id == Id)
+						 
 						 select new MobileRND_BookingEntry_VM()
 						 {
 							 Id = booking.Id,
@@ -302,7 +305,10 @@ namespace WebAppEs.Services
         public List<MobileRND_BookingDetailsEntry_VM> BokkingDetailByHead(Guid BookingId)
         {
 			var items = (from details in _context.MobileRND_BookingDetailsEntry.Where(x=> x.BookingId == BookingId)
-						 
+						 join cus in _context.MobileRND_CustomerInfo
+							on new { X1 = details.CustomerNo } equals new { X1 = cus.CustomerNo }
+							into rmppr
+						 from rmpr in rmppr.DefaultIfEmpty()
 						 select new MobileRND_BookingDetailsEntry_VM()
 						 {
 							 Id = details.Id,
@@ -310,10 +316,69 @@ namespace WebAppEs.Services
 							 Quantity = details.Quantity,
 							 Ammount = details.Ammount,
 							 Rate = details.Rate,
-							 CustomerNo = details.CustomerNo,
+							 DoNo = details.DoNo,
+							 CustomerNameWithNo = rmpr.CustomerName + " (" + details.CustomerNo + ")",
+							 CustomerNo =  details.CustomerNo,
 							 Remarks = details.Remarks,
 							 CourierType = details.CourierType,
 						 }).ToList();
+			return items;
+		}
+
+        public List<PreviewDataModel> PreviewReportData(DateTime? FromDate, DateTime? ToDate, Guid PaymentType, Guid CourierID, string Status, Guid CoustomerID)
+        {
+
+			var items = (from booking in _context.MobileRND_BookingEntry
+						 join payment in _context.MobileRND_PaymentType
+							on new { X1 = booking.PaymentTypeId } equals new { X1 = payment.Id }
+							into rmp
+						 from rm in rmp.DefaultIfEmpty()
+						 join courier in _context.MobileRND_CourierInformation
+							on new { X1 = booking.CourierId } equals new { X1 = courier.Id }
+							into rmpcu
+						 from rmcu in rmpcu.DefaultIfEmpty()
+						 join brand in _context.MobileRND_Brand
+							on new { X1 = booking.BrandID } equals new { X1 = brand.Id }
+							into rmpbr
+						 from rmbr in rmpbr.DefaultIfEmpty()
+						 join product in _context.MobileRND_Product
+							on new { X1 = booking.ProductID } equals new { X1 = product.Id }
+							into rmppr
+						 from rmpr in rmppr.DefaultIfEmpty()
+
+						 join details in _context.MobileRND_BookingDetailsEntry
+							on new { X1 = booking.Id } equals new { X1 = details.BookingId }
+							into rmde
+						 from rmd in rmde.DefaultIfEmpty()
+
+
+						 join customer in _context.MobileRND_CustomerInfo
+							on new { X1 = rmd.CustomerNo } equals new { X1 = customer.CustomerNo }
+							into rmcc
+						 from rmc in rmcc.DefaultIfEmpty()
+
+						 select new PreviewDataModel()
+						 {
+							 BookingDate = booking.BookingDate,
+							 BookingDateString = String.Format("{0:MM/dd/yyyy}", booking.BookingDate),
+							 CustomerNameWithID = rmc.CustomerName + " ("+ rmc.CustomerNo +")",
+							 CourierName = rmcu.CourierName,
+							 Area = rmd.CourierType,
+							 Brand = rmbr.BrandName,
+							 CNNumber = rmd.CNNumber,
+							 Quantity = rmd.Quantity,
+							 Rate = rmd.Rate,
+							 DoNo = rmd.DoNo,
+							 Amout = rmd.Ammount,
+							 Remarks = rmd.Remarks,
+							 Status = rmd.IsDelivered == true ? "Delivered" : "Undelivered",
+							 StatusSort = rmd.IsDelivered == true ? "yes" : "no",
+							 DeliveredDateTime = rmd.DeliveredDateTime == null ? "" : String.Format("{0:MM/dd/yyyy h:mm tt}", rmd.DeliveredDateTime),
+							 CourierID = booking.CourierId,
+							 CustomerId = rmc.Id,
+							 PaymentType = booking.PaymentTypeId
+						 }).Where(x=> ((FromDate == null || x.BookingDate >= FromDate) && (ToDate == null || x.BookingDate <= ToDate)) && (PaymentType == Guid.Empty || x.PaymentType == PaymentType) && (CourierID == Guid.Empty || x.CourierID == CourierID)
+							&& (PaymentType == Guid.Empty || x.PaymentType == PaymentType) && (CourierID == Guid.Empty || x.CourierID == CourierID) && (Status == "" || Status == null || x.StatusSort == Status) && (CoustomerID == Guid.Empty || x.CustomerId == CoustomerID)).ToList();
 			return items;
 		}
     }

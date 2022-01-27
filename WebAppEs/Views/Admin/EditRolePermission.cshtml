@@ -107,24 +107,27 @@
                         {
                             if (Model[i].ParentMenuId == null)
                             {
-                                <li>
-                                    <input type="checkbox" asp-for="@Model[i].Permitted" />
-                                    <label style="margin-left:10px; color:blue" asp-for="@Model[i].Permitted">@Model[i].Name - Head</label>
-                                    <input type="hidden" asp-for="@Model[i].Id" />
-                                    <input type="hidden" asp-for="@Model[i].Name" />
-                                </li>
-
-                            }
-                            else
-                            {
-                                <li>
+                                <li style=" background-color: #2a3f54; padding-top: 9px; padding-left: 5px; border-radius: 6px; margin-bottom: 7px; color: white;">
                                     <input type="checkbox" asp-for="@Model[i].Permitted" />
                                     <label style="margin-left:10px;" asp-for="@Model[i].Permitted">@Model[i].Name</label>
                                     <input type="hidden" asp-for="@Model[i].Id" />
                                     <input type="hidden" asp-for="@Model[i].Name" />
                                 </li>
-                            }
 
+                                for (int j = 0; j < Model.Count; j++)
+                                {
+                                    if (Model[i].Id == Model[j].ParentMenuId)
+                                    {
+                                        <li style="margin-left:20px">
+                                            <input type="checkbox" asp-for="@Model[j].Permitted" />
+                                            <label style="margin-left:10px;" asp-for="@Model[j].Permitted">@Model[j].Name</label>
+                                            <input type="hidden" asp-for="@Model[j].Id" />
+                                            <input type="hidden" asp-for="@Model[j].Name" />
+                                        </li>
+                                    }
+
+                                }
+                            }
                         }
                     </ul>
                 </div>
