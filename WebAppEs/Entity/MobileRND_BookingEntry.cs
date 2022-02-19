@@ -28,7 +28,7 @@ namespace WebAppEs.Entity
         [Required]
         public Guid ProductID { get; set; }
 
-        public bool IsApprove { get; set; }
+        //public bool IsApprove { get; set; }
 
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedOn { get; set; }

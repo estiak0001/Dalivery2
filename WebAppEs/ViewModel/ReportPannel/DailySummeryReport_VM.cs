@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebAppEs.ViewModel.Courier;
 
-namespace WebAppEs.ViewModel.Booking
+namespace WebAppEs.ViewModel.ReportPannel
 {
-    public class MobileRND_BookingEntry_VM
+    public class DailySummeryReport_VM
     {
         public Guid Id { get; set; }
         public DateTime? BookingDate { get; set; }
@@ -22,19 +21,11 @@ namespace WebAppEs.ViewModel.Booking
         public Guid ProductID { get; set; }
         public string Brand { get; set; }
         public string Product { get; set; }
-        public bool IsApprove { get; set; }
 
-        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedOn { get; set; }
-        public Guid LUser { get; set; }
-        public bool StatusIsToday { get; set; }
-        public List<MobileRND_BookingDetailsEntry_VM> bookingDetails { get; set; }
 
-        public List<MobileRND_PaymentType_VM> paymentTypeList { get; set; }
-        public List<MobileRND_Brand_VM> brandList { get; set; }
-        public List<MobileRND_Product_VM> productList { get; set; }
-
-        public List<MobileRND_CourierInformation_VM> courierList { get; set; }
+        public int CN { get; set; }
+        public int Quantity { get; set; }
+        public decimal Amount { get; set; }
 
         public int TotalCN { get; set; }
         public int TotalQuantity { get; set; }

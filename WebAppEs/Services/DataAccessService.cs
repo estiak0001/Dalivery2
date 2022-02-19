@@ -12,6 +12,7 @@ using WebAppEs.ViewModel.Register;
 using WebAppEs.ViewModel.Booking;
 using WebAppEs.Entity;
 using WebAppEs.ViewModel.ReportPannel;
+using WebAppEs.ViewModel.Indexing;
 
 namespace WebAppEs.Services
 {
@@ -19,11 +20,12 @@ namespace WebAppEs.Services
 	{
 		private readonly IMemoryCache _cache;
 		private readonly ApplicationDbContext _context;
-
-		public DataAccessService(ApplicationDbContext context, IMemoryCache cache)
+		private readonly ISetupService _setupService;
+		public DataAccessService(ApplicationDbContext context, IMemoryCache cache, ISetupService setupService)
 		{
 			_cache = cache;
 			_context = context;
+			_setupService = setupService;
 		}
 
 		public async Task<List<NavigationMenuViewModel>> GetMenuItemsAsync(ClaimsPrincipal principal)
@@ -191,7 +193,7 @@ namespace WebAppEs.Services
 					CourierId = viewModel.CourierId,
 					BrandID = viewModel.BrandID,
 					ProductID = viewModel.ProductID,
-					IsApprove = false,
+					//IsApprove = false,
 					LUser = viewModel.LUser
 				});
 			}
@@ -267,6 +269,10 @@ namespace WebAppEs.Services
 							on new { X1 = booking.ProductID } equals new { X1 = product.Id }
 							into rmppr
 						 from rmpr in rmppr.DefaultIfEmpty()
+						 //join details in _context.MobileRND_BookingDetailsEntry
+							//on new { X1 = booking.Id } equals new { X1 = details.BookingId }
+							//into ddd
+						 //from dd in ddd.DefaultIfEmpty()
 						 select new MobileRND_BookingEntry_VM()
 						 {
 							 Id = booking.Id,
@@ -280,8 +286,10 @@ namespace WebAppEs.Services
 							 PaymentName = rm.TypeName,
 							 Courier = rmcu.CourierName,
 							 Brand = rmbr.BrandName,
-							 Product = rmpr.ProductName
-
+							 Product = rmpr.ProductName,
+							 TotalQuantity = _context.MobileRND_BookingDetailsEntry.Where(pi => pi.BookingId == booking.Id).Select(pi => pi.Quantity).Sum(),
+							 TotalAmount = _context.MobileRND_BookingDetailsEntry.Where(pi => pi.BookingId == booking.Id).Select(pi => pi.Ammount).Sum(),
+							 TotalCN = _context.MobileRND_BookingDetailsEntry.Where(pi => pi.BookingId == booking.Id).Select(pi => pi.CNNumber).Count(),
 						 }).ToList();
 			return items;
 		}
@@ -380,6 +388,230 @@ namespace WebAppEs.Services
 						 }).Where(x=> ((FromDate == null || x.BookingDate >= FromDate) && (ToDate == null || x.BookingDate <= ToDate)) && (PaymentType == Guid.Empty || x.PaymentType == PaymentType) && (CourierID == Guid.Empty || x.CourierID == CourierID)
 							&& (PaymentType == Guid.Empty || x.PaymentType == PaymentType) && (CourierID == Guid.Empty || x.CourierID == CourierID) && (Status == "" || Status == null || x.StatusSort == Status) && (CoustomerID == Guid.Empty || x.CustomerId == CoustomerID)).ToList();
 			return items;
+		}
+
+        public async Task<bool> AddIndexingData(MobileRND_IndexingEntry_VM viewModel)
+        {
+			var result = 0;
+			var UpdateDataSet = await _context.MobileRND_IndexingEntry.Where(x => x.Id == viewModel.Id).FirstOrDefaultAsync();
+
+			if (UpdateDataSet != null)
+			{
+				UpdateDataSet.ItemId = viewModel.ItemId;
+				UpdateDataSet.Grade = viewModel.Grade;
+				UpdateDataSet.Block = viewModel.Block;
+				UpdateDataSet.RackNo = viewModel.RackNo;
+				UpdateDataSet.StageNo = viewModel.StageNo;
+				UpdateDataSet.ColumNo = viewModel.ColumNo;
+
+				UpdateDataSet.IndexingDate = (DateTime)viewModel.IndexingDate;
+				UpdateDataSet.Remarks = viewModel.Remarks;
+
+				_context.MobileRND_IndexingEntry.Update(UpdateDataSet);
+				result = await _context.SaveChangesAsync();
+			}
+			else
+			{
+				_context.MobileRND_IndexingEntry.Add(new MobileRND_IndexingEntry()
+				{
+					ItemId = viewModel.ItemId,
+					Grade = viewModel.Grade,
+					Block = viewModel.Block,
+					RackNo = viewModel.RackNo,
+					StageNo = viewModel.StageNo,
+					ColumNo = viewModel.ColumNo,
+					IndexingDate = (DateTime)viewModel.IndexingDate,
+					Remarks = viewModel.Remarks
+				});
+				result = await _context.SaveChangesAsync();
+			}
+			return result > 0;
+		}
+
+        public List<MobileRND_IndexingEntry_VM> GetAllIndexingDatalList()
+        {
+			var items = (from ind in _context.MobileRND_IndexingEntry
+						 join it in _context.MobileRND_Items
+							on new { X1 = ind.ItemId } equals new { X1 = it.Id }
+							into ittt
+						 from itttt in ittt.DefaultIfEmpty()
+						 join brand in _context.MobileRND_Brand
+							on new { X1 = itttt.Brand } equals new { X1 = brand.Id }
+							into br
+						 from brr in br.DefaultIfEmpty()
+						 join model in _context.MobileRND_ProductModel
+							on new { X1 = itttt.ModelId } equals new { X1 = model.ID }
+							into mo
+						 from moo in mo.DefaultIfEmpty()
+						 select new MobileRND_IndexingEntry_VM()
+						 {
+							 Id = ind.Id,
+							 IndexingDate = ind.IndexingDate,
+							 IndexingDateString = String.Format("{0:MM/dd/yyyy}", ind.IndexingDate),
+							 BrandName = brr.BrandName,
+							 ModelName = moo.Name,
+							 ItemCode = itttt.ItemCode,
+							 ItemName = itttt.ItemName,
+							 ItemId = itttt.Id,
+							 Grade = ind.Grade,
+							 Block = "Block-"+ind.Block,
+							 RackNo = "Rack-"+ind.RackNo,
+							 StageNo = "Stage-"+ind.StageNo,
+							 ColumNo = "Colum-"+ind.ColumNo,
+							 Remarks = ind.Remarks,
+						 }).ToList();
+			return items;
+		}
+
+		public MobileRND_IndexingEntry_VM GetIndexingData(Guid Id)
+        {
+			var items = (from ind in _context.MobileRND_IndexingEntry.Where(x=> x.Id == Id)
+						 join it in _context.MobileRND_Items
+							on new { X1 = ind.ItemId } equals new { X1 = it.Id }
+							into ittt
+						 from itttt in ittt.DefaultIfEmpty()
+						 join brand in _context.MobileRND_Brand
+							on new { X1 = itttt.Brand } equals new { X1 = brand.Id }
+							into br
+						 from brr in br.DefaultIfEmpty()
+						 join model in _context.MobileRND_ProductModel
+							on new { X1 = itttt.ModelId } equals new { X1 = model.ID }
+							into mo
+						 from moo in mo.DefaultIfEmpty()
+						 select new MobileRND_IndexingEntry_VM()
+						 {
+							 Id = ind.Id,
+							 IndexingDate = ind.IndexingDate,
+							 IndexingDateString = String.Format("{0:MM/dd/yyyy}", ind.IndexingDate),
+							 BrandName = brr.BrandName,
+							 ModelName = moo.Name,
+							 ItemCode = itttt.ItemCode,
+							 ItemName = itttt.ItemName,
+							 ItemId = itttt.Id,
+							 Grade = ind.Grade,
+							 Block = ind.Block,
+							 RackNo = ind.RackNo,
+							 StageNo = ind.StageNo,
+							 ColumNo = ind.ColumNo,
+							 Remarks = ind.Remarks,
+						 }).FirstOrDefault();
+			return items;
+		}
+
+		public List<MobileRND_IndexingEntry_VM> GetIndexingDataItemWise(Guid ItemId, Guid Brand, Guid Model, string Grade)
+		{
+			var items = (from ind in _context.MobileRND_IndexingEntry
+						 join it in _context.MobileRND_Items
+							on new { X1 = ind.ItemId } equals new { X1 = it.Id }
+							into ittt
+						 from itttt in ittt.DefaultIfEmpty()
+						 join brand in _context.MobileRND_Brand
+							on new { X1 = itttt.Brand } equals new { X1 = brand.Id }
+							into br
+						 from brr in br.DefaultIfEmpty()
+						 join model in _context.MobileRND_ProductModel
+							on new { X1 = itttt.ModelId } equals new { X1 = model.ID }
+							into mo
+						 from moo in mo.DefaultIfEmpty()
+						 select new MobileRND_IndexingEntry_VM()
+						 {
+							 Id = ind.Id,
+							 IndexingDate = ind.IndexingDate,
+							 IndexingDateString = String.Format("{0:MM/dd/yyyy}", ind.IndexingDate),
+							 BrandName = brr.BrandName,
+							 ModelName = moo.Name,
+							 ItemCode = itttt.ItemCode,
+							 ItemName = itttt.ItemName,
+							 ItemId = itttt.Id,
+							 Grade = ind.Grade,
+							 Block = "Block-" + ind.Block,
+							 RackNo = "Rack-" + ind.RackNo,
+							 StageNo = "Stage-" + ind.StageNo,
+							 ColumNo = "Colum-" + ind.ColumNo,
+							 Remarks = ind.Remarks,
+							 BrandId = itttt.Brand,
+							 ModelId = moo.ID
+						 }).Where(x => (ItemId == Guid.Empty || x.ItemId == ItemId) && (Brand == Guid.Empty || x.BrandId == Brand) && (Model == Guid.Empty || x.ModelId == Model) && (Grade == "" || x.Grade == Grade)).ToList();
+			return items;
+		}
+
+        public List<DailySummeryReport_VM> DailySummeryReport(DateTime? FromDate, DateTime? ToDate, Guid BrandId)
+        {
+			//var rt = from ind in _context.MobileRND_BookingEntry
+			//		 join it in _context.MobileRND_BookingDetailsEntry
+			//				 on new { X1 = ind.Id } equals new { X1 = it.BookingId }
+			//				 into ittt
+			//		 from itttt in ittt.DefaultIfEmpty()
+			//		 select new(pi => ind.Quantity).Sum();
+
+			//		var t = from ind in _context.MobileRND_BookingEntry
+			//				join it in _context.MobileRND_BookingDetailsEntry
+			//				 on new { X1 = ind.Id } equals new { X1 = it.BookingId }
+			//				 into ittt
+			//				from itttt in ittt.DefaultIfEmpty()
+			//				select new
+			//				{
+			//					qu = itttt.Quantity
+			//				};
+
+			string iDate = "01/12/2022";
+			DateTime oDate = Convert.ToDateTime(iDate);
+
+			var items = (from booking in _context.MobileRND_BookingEntry
+						 join payment in _context.MobileRND_PaymentType
+							on new { X1 = booking.PaymentTypeId } equals new { X1 = payment.Id }
+							into rmp
+						 from rm in rmp.DefaultIfEmpty()
+						 join courier in _context.MobileRND_CourierInformation
+							on new { X1 = booking.CourierId } equals new { X1 = courier.Id }
+							into rmpcu
+						 from rmcu in rmpcu.DefaultIfEmpty()
+						 join brand in _context.MobileRND_Brand
+							on new { X1 = booking.BrandID } equals new { X1 = brand.Id }
+							into rmpbr
+						 from rmbr in rmpbr.DefaultIfEmpty()
+						 join product in _context.MobileRND_Product
+							on new { X1 = booking.ProductID } equals new { X1 = product.Id }
+							into rmppr
+						 from rmpr in rmppr.DefaultIfEmpty()
+							 //join details in _context.MobileRND_BookingDetailsEntry
+							 //on new { X1 = booking.Id } equals new { X1 = details.BookingId }
+							 //into ddd
+							 //from dd in ddd.DefaultIfEmpty()
+						 select new DailySummeryReport_VM()
+						 {
+							 Id = booking.Id,
+							 CourierId = booking.CourierId,
+							 BookingDate = booking.BookingDate,
+							 DateString = String.Format("{0:MM/dd/yyyy}", booking.BookingDate),
+							 BrandID = booking.BrandID,
+							 ProductID = booking.ProductID,
+							 PaymentTypeId = booking.PaymentTypeId,
+							 PaymentName = rm.TypeName,
+							 Courier = rmcu.CourierName,
+							 Brand = rmbr.BrandName,
+							 Product = rmpr.ProductName,
+
+							 TotalQuantity = _context.MobileRND_BookingDetailsEntry.Where(pi => pi.BookingId == booking.Id).Select(pi => pi.Quantity).Sum(),
+							 TotalAmount = _context.MobileRND_BookingDetailsEntry.Where(pi => pi.BookingId == booking.Id).Select(pi => pi.Ammount).Sum(),
+							 TotalCN = _context.MobileRND_BookingDetailsEntry.Where(pi => pi.BookingId == booking.Id).Select(pi => pi.CNNumber).Count(),
+
+							 //TotalQuantity = _context.MobileRND_BookingDetailsEntry.Where(pi => pi. == booking.Id).Select(pi => pi.Quantity).Sum(),
+							 //TotalAmount = _context.MobileRND_BookingDetailsEntry.Where(pi => pi.BookingId == booking.Id).Select(pi => pi.Ammount).Sum(),
+							 //TotalCN = _context.MobileRND_BookingDetailsEntry.Where(pi => pi.BookingId == booking.Id).Select(pi => pi.CNNumber).Count(),
+						 }).Where(x=> x.BrandID == BrandId).ToList();
+
+			var courierlist = _setupService.GetAllCourierList();
+
+
+
+			return items;
+		}
+
+        public MobileRND_BookingDetailsEntry BookingDataByCN(string CNNO)
+        {
+			var data = _context.MobileRND_BookingDetailsEntry.Where(x => x.CNNumber == CNNO).FirstOrDefault();
+			return data;
 		}
     }
 }

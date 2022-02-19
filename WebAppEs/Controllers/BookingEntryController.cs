@@ -143,18 +143,22 @@ namespace WebAppEs.Controllers
                 }
                 else
                 {
-                    var details = _dataAccessService.AllDataByBookingID(head.Id);
-                    if (details != null)
-                    {
-                        var isDelete = _dataAccessService.RemoveDetails(details);
-                    }
+                    //var details = _dataAccessService.AllDataByBookingID(head.Id);
+                    //if (details != null)
+                    //{
+                    //    var isDelete = _dataAccessService.RemoveDetails(details);
+                    //}
 
                     foreach (var it in model.bookingDetails)
                     {
-                        it.BookingId = head.Id;
-                        it.LUser = newGuid;
+                        var isExist = _dataAccessService.BookingDataByCN(it.CNNumber);
+                        if (isExist == null)
+                        {
+                            it.BookingId = head.Id;
+                            it.LUser = newGuid;
 
-                        DetailsSubmit = _dataAccessService.AddBookingDetails(it);
+                            DetailsSubmit = _dataAccessService.AddBookingDetails(it);
+                        }
                     }
                 }
             }

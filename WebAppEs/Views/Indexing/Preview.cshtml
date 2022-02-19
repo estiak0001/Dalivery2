@@ -1,0 +1,197 @@
+﻿@model WebAppEs.ViewModel.Indexing.PreviewModel
+    @inject IJsonHelper Json;
+    @{
+        ViewData["Title"] = "Preview";
+    }
+    <style>
+        .rreedd {
+            color: red;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
+
+    <div class="x_panel">
+        <div class="x_title">
+            <h2 style="color: #05445e; font-weight: bolder;">Report Preview</h2>
+            <div class="clearfix"><a style="float: right;" class="btn btn-sm btn-dark" >Export</a></div>
+        </div>
+        <div class="x_content">
+            <br />
+            <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                <div class="row">
+                    <div class="col-md-2 col-sm-2  form-group has-feedback">
+                        <label style="padding-left: 10px;">Brand</label>
+                        <div class="item form-group">
+                            <div class="col-md-12 col-sm-12 ">
+                                <select asp-for="BrandId" id="ddlBrand" class="form-control">
+                                    <option value="">--Select Brand--</option>
+                                    @foreach (var item in Model.brandlist)
+                                    {
+                                        <option value="@item.Id">@item.BrandName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-2  form-group has-feedback">
+                        <label style="padding-left: 10px;">Model</label>
+                        <div class="item form-group">
+                            <div class="col-md-12 col-sm-12 ">
+                                <select asp-for="ModelId" id="ddlModel" class="form-control">
+                                    <option value="">--Select Model--</option>
+                                    @foreach (var item in Model.modelList)
+                                    {
+                                        <option value="@item.ID">@item.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-2  form-group has-feedback">
+                        <label style="padding-left: 10px;">Item</label>
+                        <div class="item form-group">
+                            <div class="col-md-12 col-sm-12 ">
+                                <select asp-for="ModelId" id="ddlItem" class="form-control">
+                                    <option value="">--Select Item--</option>
+                                    @foreach (var item in Model.itemlist)
+                                    {
+                                        <option value="@item.Id">@item.ItemNameWithItemCode</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-2  form-group has-feedback">
+                        <label style="padding-left: 10px;">Grade</label>
+                        <div class="item form-group">
+                            <div class="col-md-12 col-sm-12 ">
+                                <select asp-for="Grade" id="ddlGrade" class="form-control form-control-sm">
+                                    <option value="">--Select Grade--</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="ln_solid"></div>
+                <div class="form-group row">
+                    <div style="text-align:center" class="col-md-12 col-sm-12">
+                        <button style="float:right" id="previewdata" type="button" class="btn btn-info">Preview</button>
+                    </div>
+                </div>
+            </form>
+
+            <div style="width:100%!important; padding-left:20px;" class="row">
+                @*<div style="padding: 15px; padding: 15px; font-size: 20px;">Total Quantity: <span class="badge badge-info totalqty">0</span> Total Amount: <span class="badge badge-info totalamount">0</span></div>*@
+            <div style="width:100%!important" class="" id="DetailsData">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        var LoadItemWiseDataData = [];
+        $(document).ready(function () {
+            $('#ddlModel, #ddlItem').select2();
+
+            $('#previewdata').click(function () {
+                
+                var ItemId = $('#ddlItem').val();
+                var Brand = $('#ddlBrand').val();
+                var Model = $('#ddlModel').val();
+                var Grade = $('#ddlGrade').val();
+
+
+                var obj = { "ItemId": ItemId, "Brand": Brand, "Model": Model, "Grade": Grade };
+                AjaxCall('@Url.Action("LoadIndexingDataItemWise", "Indexing")', obj, 'POST').done(function (response) {
+                    LoadItemWiseDataData = [];
+                        if (response.length != 0) {
+                            
+                            for (var h = 0; h < response.length; h++) {
+
+                                console.log(response);
+
+                                LoadItemWiseDataData.push({
+                                    Brand: response[h].brandName,
+                                    Model: response[h].modelName,
+                                    ItemCode: response[h].itemCode,
+                                    ItemName: response[h].itemName,
+                                    Grade: response[h].grade,
+                                    Block: response[h].block,
+                                    RackNo: response[h].rackNo,
+                                    StageNo: response[h].stageNo,
+                                    ColumNo: response[h].columNo,
+                                    Date: response[h].indexingDateString,
+                                    Remarks: response[h].remarks,
+                                });
+                            }
+                        }
+                    GeneratedItemsTable();
+                    }).fail(function (error) {
+                        alert(error.StatusText);
+                    });
+
+            });
+        });
+
+        function AjaxCall(url, data, type) {
+            return $.ajax({
+                url: url,
+                type: type,
+                data: data,
+                //contentType: 'application/json'
+            });
+        }
+
+        function GeneratedItemsTable() {
+            if (LoadItemWiseDataData.length > 0) {
+
+                var $table = $('<table style="text-align: center;" id="tempTable" class="table table-sm table-striped table-bordered" style="width:100%"/>');
+                $table.append('<thead style = "background-color: #323232; color: white;"><tr><th>Brand</th><th>Model</th><th>Item</th><th>Grade</th><th>Block</th><th>Rack No.</th><th>Stage No.</th><th>Colum No.</th><th>Date</th><th>Remarks</th></tr></thead>');
+                var $tbody = $('<tbody/>');
+
+                $.each(LoadItemWiseDataData, function (i, val) {
+                    var $row = $('<tr/>');
+                    $row.append($('<td/>').html(val.Brand));
+                    $row.append($('<td/>').html(val.Model));
+                    $row.append($('<td/>').html(val.ItemName));
+                    $row.append($('<td/>').html(val.Grade));
+                    $row.append($('<td/>').html(val.Block));
+                    $row.append($('<td/>').html(val.RackNo));
+                    $row.append($('<td/>').html(val.StageNo));
+                    $row.append($('<td/>').html(val.ColumNo));
+                    $row.append($('<td/>').html(val.Date));
+                    $row.append($('<td/>').html(val.Remarks));
+                    $tbody.append($row);
+                });
+
+                //console.log("current", DetailsData);
+                $table.append($tbody);
+                $('#DetailsData').html($table);
+
+                //$('.ss').prop("disabled", true);
+
+                $('#tempTable').DataTable({
+                    //"ordering": false,
+                    pageLength: 100,
+                });
+
+            }
+            else {
+                $('#DetailsData').html('');
+            }
+        }
+    </script>
+}
+

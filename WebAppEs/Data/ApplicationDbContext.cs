@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebAppEs.Entity;
 using WebAppEs.Models;
+using WebAppEs.ViewModel.ProductModel;
 
 namespace WebAppEs.Data
 {
@@ -28,6 +29,10 @@ namespace WebAppEs.Data
 		public DbSet<MobileRND_Product> MobileRND_Product { get; set; }
 		public DbSet<MobileRND_BookingEntry> MobileRND_BookingEntry { get; set; }
 		public DbSet<MobileRND_BookingDetailsEntry> MobileRND_BookingDetailsEntry { get; set; }
+		public DbSet<MobileRND_ProductModel> MobileRND_ProductModel { get; set; }
+		public DbSet<MobileRND_Items> MobileRND_Items { get; set; }
+		public DbSet<MobileRND_IndexingEntry> MobileRND_IndexingEntry { get; set; }
+		
 
 
 

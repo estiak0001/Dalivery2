@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAppEs.Data;
 
 namespace WebAppEs.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220213083447_initialtoday")]
+    partial class initialtoday
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -379,6 +381,9 @@ namespace WebAppEs.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsApprove")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("LUser")
                         .HasColumnType("uniqueidentifier");
 
@@ -491,9 +496,6 @@ namespace WebAppEs.Migrations
                         .HasMaxLength(150);
 
                     b.Property<string>("DeliveryAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DeliveryDetails")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("LUser")

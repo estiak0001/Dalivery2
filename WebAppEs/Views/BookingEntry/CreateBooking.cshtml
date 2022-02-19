@@ -43,219 +43,217 @@
         color: black;
     }
 </style>
-<div class="col-md-12 ">
-    <div class="x_panel">
-        <div class="x_title">
-            <h2>Booking Information</h2>
+<div class="x_panel">
+    <div class="x_title">
+        <h2>Booking Information</h2>
 
-            <p class="badge badge-dark" style="float: right; font-size: large; margin: 0px; background-color:darkgoldenrod">Approved</p>
-            <div class="clearfix"></div>
-        </div>
-        <div class="x_content">
-            <br />
-            <form class="form-label-left input_mask">
-                <div class="row">
-                    <div class="col-md-2 col-sm-2  form-group has-feedback">
-                        <label style="padding-left: 10px;">Booking Date</label>
-                        <div class="item form-group">
-                            <div class="col-md-12 col-sm-12 ">
-                                <input asp-for="BookingDate" type="date" class="form-control has-feedback-left" id="txtBookingDate" placeholder="Booking Date">
-                                <span class="fa fa-calendar form-control-feedback left" aria-hidden="true"></span>
-                                <span class="error">Enter Booking Date!</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-sm-2  form-group has-feedback">
-                        <label style="padding-left: 10px;">Payment Type</label>
-                        <div class="item form-group">
-                            <div class="col-md-12 col-sm-12 ">
-                                <select asp-for="PaymentTypeId" id="ddlPayment" class="form-control">
-                                    <option value="">--Select Payment Type--</option>
-                                    @foreach (var item in Model.paymentTypeList)
-                                    {
-                                        <option value="@item.Id">@item.TypeName</option>
-                                    }
-                                </select>
-                                <span class="error">Select Payment Type!</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-sm-2  form-group has-feedback">
-                        <label style="padding-left: 10px;">Courier</label>
-                        <div class="item form-group">
-                            <div class="col-md-12 col-sm-12 ">
-                                <select asp-for="CourierId" id="ddlCourier" class="form-control">
-                                    <option value="">--Select Courier--</option>
-                                    @foreach (var item in Model.courierList)
-                                    {
-                                        <option value="@item.Id">@item.CourierName</option>
-                                    }
-                                </select>
-                                <span class="error">Select Courier!</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-sm-2  form-group has-feedback">
-                        <label style="padding-left: 10px;">Area</label>
-                        <div class="item form-group">
-                            <div class="col-md-12 col-sm-12 ">
-                                <select id="ddlCourierType" class="form-control">
-                                    <option value="">--Select Courier Type--</option>
-                                    <option value="Cover">Cover</option>
-                                    <option value="Non Cover">Non Cover</option>
-                                </select>
-                                <span class="error">Select Courier Type!</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-2 col-sm-2  form-group has-feedback">
-                        <label style="padding-left: 10px;">Brand</label>
-                        <div class="item form-group">
-                            <div class="col-md-12 col-sm-12 ">
-                                <select asp-for="BrandID" id="ddlBrand" class="form-control">
-                                    <option style="color: #8d9195!important" value="">--Select Brand--</option>
-                                    @foreach (var item in Model.brandList)
-                                    {
-                                        <option value="@item.Id">@item.BrandName</option>
-                                    }
-                                </select>
-                                <span class="error">Select Brand!</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-2 col-sm-2  form-group has-feedback">
-                        <label style="padding-left: 10px;">Product</label>
-                        <div class="item form-group">
-                            <div class="col-md-12 col-sm-12 ">
-                                <select asp-for="ProductID" id="ddlProduct" class="form-control">
-                                    <option value="">--Select Brand--</option>
-                                    @foreach (var item in Model.productList)
-                                    {
-                                        <option selected value="@item.Id">@item.ProductName</option>
-                                    }
-                                </select>
-                                <span class="error">Select Product!</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div style="border: 1px solid; padding-top:5px; margin-bottom:7px; border-radius: 9px; background: floralwhite;" class="row">
-                    <div style="text-align: center; padding: 0px;" class="col-md-2 col-sm-2  form-group has-feedback">
-                        <label style="padding-left: 10px;">CN No.</label>
-                        <div class="item form-group">
-                            <div class="col-md-12 col-sm-12 ">
-                                <input tabindex="1" type="text" class="form-control form-control-sm details" id="details1" placeholder="CN No.">
-                                <span class="error">Enter CN No.!</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="text-align: center; padding: 0px;" class="col-md-1 col-sm-1  form-group has-feedback">
-                        <label style="padding-left: 10px;">Quantity</label>
-                        <div class="item form-group">
-                            <div class="col-md-12 col-sm-12 ">
-                                <input tabindex="2" type="number" class="form-control form-control-sm details quantitycalc" id="details2" placeholder="Quantity">
-                                <span class="error">Enter Qty!</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="text-align: center; padding: 0px;" class="col-md-1 col-sm-1  form-group has-feedback">
-                        <label style="padding-left: 10px;">Amount</label>
-                        <div class="item form-group">
-                            <div class="col-md-12 col-sm-12 ">
-                                <input id="details3" tabindex="3" type="number" class="form-control form-control-sm details amountcalc" placeholder="Amount">
-                                <span class="error">Enter Amount!</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="text-align: center; padding: 0px;" class="col-md-1 col-sm-1  form-group has-feedback">
-                        <label style="padding-left: 10px;">Rate</label>
-                        <div class="item form-group">
-                            <div class="col-md-12 col-sm-12 ">
-                                <input readonly type="number" class="form-control form-control-sm details" id="details4" placeholder="Rate">
-                                <span class="error">Enter Rate!</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="text-align: center; padding: 0px;" class="col-md-1 col-sm-1  form-group has-feedback">
-                        <label style="padding-left: 10px;">Customer No.</label>
-                        <div class="item form-group">
-                            <div class="col-md-12 col-sm-12 ">
-                                <input tabindex="4" type="text" class="form-control form-control-sm details customertype" id="details5" placeholder="Customer No">
-                                <span class="error">Enter valid Customer No.!</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="text-align: center; padding: 0px;" class="col-md-2 col-sm-2  form-group has-feedback">
-                        <label style="padding-left: 10px;">Customer Name</label>
-                        <div class="item form-group">
-                            <div class="col-md-12 col-sm-12 ">
-                                <label type="text" class="form-control form-control-sm customernamefromontype" id="customerNamelabel" placeholder=""></label>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="text-align: center; padding: 0px;" class="col-md-2 col-sm-2  form-group has-feedback">
-                        <label style="padding-left: 10px;">DO No.</label>
-                        <div class="item form-group">
-                            <div class="col-md-12 col-sm-12 ">
-                                <input tabindex="5" type="text" class="form-control form-control-sm details" id="details7" placeholder="DO No.">
-                                <span class="error">Enter DO No.!</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="text-align: center; padding: 0px;" class="col-md-2 col-sm-2  form-group has-feedback">
-                        <label style="padding-left: 10px;">Remarks</label>
-                        <div class="item form-group">
-                            <div class="col-md-12 col-sm-12 ">
-                                <textarea style="height: 48px;" tabindex="6" type="text" class="form-control form-control-sm details" id="details6" placeholder="Remarks/Note"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div style="text-align:center">
-                    <input type="button" class="btn btn-sm btn-success" id='addDetails' value='Add' />
-                </div>
-                <div>
-                    <div class="row">
-                        <div class="col-md-2">
-
-                        </div>
-                        <div style="border: 2px solid; border-radius: 7px; margin-right: 4px;" class="col-md-3">
-                            <h4 style="text-align: center; margin: 4px; ">C.Name: <strong style="color: darkmagenta;" class="cname"></strong></h4>
-                        </div>
-                        <div style="border: 2px solid; border-radius: 7px; margin-right: 4px;" class="col-md-2">
-                            <h4 style="text-align: center; margin: 4px; "><strong style="color: #527b09;" class="bdate"></strong></h4>
-                        </div>
-                        <div style="border: 2px solid; border-radius: 7px; margin-right: 4px;" class="col-md-3">
-                            <h4 style="text-align: center; margin: 4px; ">Brand: <strong style="color: blue;" class="bname"></strong></h4>
-                        </div>
-                        <div class="col-md-2">
-
-                        </div>
-                    </div>
-                </div>
-                <div style="width:100%!important; padding-left:20px;" class="row">
-                    <div style="padding: 15px; padding: 15px; font-size: 20px;">Total Quantity: <span class="badge badge-info totalqty">0</span> Total Amount: <span class="badge badge-info totalamount">0</span></div>
-                    <div style="width:100%!important" class="" id="DetailsData">
-                    </div>
-                </div>
-                <div class="ln_solid"></div>
-                <div class="form-group row">
-                    <div style="text-align:center" class="col-md-12 col-sm-12">
-                        <a asp-action="Index" class="btn btn-dark">Back to List</a>
-                        @*<button style="float:right" class="btn btn-primary" type="reset">Reset</button>*@
-                        <button style="text-align: center; background-color: darkgreen!important; border-color: darkgreen!important;" id="ApproveData" type="button" class="btn btn-success">Approve</button>
-                        <button style="float:right" id="submitData" type="button" class="btn btn-success">Submit</button>
-                    </div>
-                </div>
-
-            </form>
-        </div>
+        <p class="badge badge-dark" style="float: right; font-size: large; margin: 0px; background-color:darkgoldenrod">Approved</p>
+        <div class="clearfix"></div>
     </div>
+    <div class="x_content">
+        <br />
+        <form class="form-label-left input_mask">
+            <div class="row">
+                <div class="col-md-2 col-sm-2  form-group has-feedback">
+                    <label style="padding-left: 10px;">Booking Date</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <input asp-for="BookingDate" type="date" class="form-control has-feedback-left" id="txtBookingDate" placeholder="Booking Date">
+                            <span class="fa fa-calendar form-control-feedback left" aria-hidden="true"></span>
+                            <span class="error">Enter Booking Date!</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-2  form-group has-feedback">
+                    <label style="padding-left: 10px;">Payment Type</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <select asp-for="PaymentTypeId" id="ddlPayment" class="form-control">
+                                <option value="">--Select Payment Type--</option>
+                                @foreach (var item in Model.paymentTypeList)
+                                {
+                                    <option value="@item.Id">@item.TypeName</option>
+                                }
+                            </select>
+                            <span class="error">Select Payment Type!</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-2  form-group has-feedback">
+                    <label style="padding-left: 10px;">Courier</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <select asp-for="CourierId" id="ddlCourier" class="form-control">
+                                <option value="">--Select Courier--</option>
+                                @foreach (var item in Model.courierList)
+                                {
+                                    <option value="@item.Id">@item.CourierName</option>
+                                }
+                            </select>
+                            <span class="error">Select Courier!</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-2  form-group has-feedback">
+                    <label style="padding-left: 10px;">Area</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <select id="ddlCourierType" class="form-control">
+                                <option value="">--Select Courier Type--</option>
+                                <option value="Cover">Cover</option>
+                                <option value="Non Cover">Non Cover</option>
+                            </select>
+                            <span class="error">Select Courier Type!</span>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="col-md-2 col-sm-2  form-group has-feedback">
+                    <label style="padding-left: 10px;">Brand</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <select asp-for="BrandID" id="ddlBrand" class="form-control">
+                                <option style="color: #8d9195!important" value="">--Select Brand--</option>
+                                @foreach (var item in Model.brandList)
+                                {
+                                    <option value="@item.Id">@item.BrandName</option>
+                                }
+                            </select>
+                            <span class="error">Select Brand!</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2 col-sm-2  form-group has-feedback">
+                    <label style="padding-left: 10px;">Product</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <select asp-for="ProductID" id="ddlProduct" class="form-control">
+                                <option value="">--Select Brand--</option>
+                                @foreach (var item in Model.productList)
+                                {
+                                    <option selected value="@item.Id">@item.ProductName</option>
+                                }
+                            </select>
+                            <span class="error">Select Product!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="border: 1px solid; padding-top:5px; margin-bottom:7px; border-radius: 9px; background: floralwhite;" class="row">
+                <div style="text-align: center; padding: 0px;" class="col-md-2 col-sm-2  form-group has-feedback">
+                    <label style="padding-left: 10px;">CN No.</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <input tabindex="1" type="text" class="form-control form-control-sm details" id="details1" placeholder="CN No.">
+                            <span class="error">Enter CN No.!</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; padding: 0px;" class="col-md-1 col-sm-1  form-group has-feedback">
+                    <label style="padding-left: 10px;">Quantity</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <input tabindex="2" type="number" class="form-control form-control-sm details quantitycalc" id="details2" placeholder="Quantity">
+                            <span class="error">Enter Qty!</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; padding: 0px;" class="col-md-1 col-sm-1  form-group has-feedback">
+                    <label style="padding-left: 10px;">Amount</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <input id="details3" tabindex="3" type="number" class="form-control form-control-sm details amountcalc" placeholder="Amount">
+                            <span class="error">Enter Amount!</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; padding: 0px;" class="col-md-1 col-sm-1  form-group has-feedback">
+                    <label style="padding-left: 10px;">Rate</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <input readonly type="number" class="form-control form-control-sm details" id="details4" placeholder="Rate">
+                            <span class="error">Enter Rate!</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; padding: 0px;" class="col-md-1 col-sm-1  form-group has-feedback">
+                    <label style="padding-left: 10px;">Customer No.</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <input tabindex="4" type="text" class="form-control form-control-sm details customertype" id="details5" placeholder="Customer No">
+                            <span class="error">Enter valid Customer No.!</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; padding: 0px;" class="col-md-2 col-sm-2  form-group has-feedback">
+                    <label style="padding-left: 10px;">Customer Name</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <label type="text" class="form-control form-control-sm customernamefromontype" id="customerNamelabel" placeholder=""></label>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; padding: 0px;" class="col-md-2 col-sm-2  form-group has-feedback">
+                    <label style="padding-left: 10px;">DO No.</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <input tabindex="5" type="text" class="form-control form-control-sm details" id="details7" placeholder="DO No.">
+                            <span class="error">Enter DO No.!</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; padding: 0px;" class="col-md-2 col-sm-2  form-group has-feedback">
+                    <label style="padding-left: 10px;">Remarks</label>
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 ">
+                            <textarea style="height: 48px;" tabindex="6" type="text" class="form-control form-control-sm details" id="details6" placeholder="Remarks/Note"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align:center">
+                <input type="button" class="btn btn-sm btn-success" id='addDetails' value='Add' />
+            </div>
+            <div>
+                <div class="row">
+                    <div class="col-md-2">
+
+                    </div>
+                    <div style="border: 2px solid; border-radius: 7px; margin-right: 4px;" class="col-md-3">
+                        <h4 style="text-align: center; margin: 4px; ">C.Name: <strong style="color: darkmagenta;" class="cname"></strong></h4>
+                    </div>
+                    <div style="border: 2px solid; border-radius: 7px; margin-right: 4px;" class="col-md-2">
+                        <h4 style="text-align: center; margin: 4px; "><strong style="color: #527b09;" class="bdate"></strong></h4>
+                    </div>
+                    <div style="border: 2px solid; border-radius: 7px; margin-right: 4px;" class="col-md-3">
+                        <h4 style="text-align: center; margin: 4px; ">Brand: <strong style="color: blue;" class="bname"></strong></h4>
+                    </div>
+                    <div class="col-md-2">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="ln_solid"></div>
+            <div class="form-group row">
+                <div style="text-align:center" class="col-md-12 col-sm-12">
+                    <a asp-action="Index" class="btn btn-dark">Back to List</a>
+                    @*<button style="float:right" class="btn btn-primary" type="reset">Reset</button>*@
+                    <button style="text-align: center; background-color: darkgreen!important; border-color: darkgreen!important;" id="ApproveData" type="button" class="btn btn-success">Approve</button>
+                    <button style="float:right" id="submitData" type="button" class="btn btn-success">Submit</button>
+                </div>
+            </div>
+
+            <div style="width:100%!important; padding-left:20px;" class="row">
+                <div style="padding: 15px; padding: 15px; font-size: 20px;">Total Quantity: <span class="badge badge-info totalqty">0</span> Total Amount: <span class="badge badge-info totalamount">0</span> Total CN: <span class="badge badge-info totalcn">0</span></div>
+                <div style="width:100%!important" class="" id="DetailsData">
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 
@@ -552,6 +550,8 @@
                                             Rate: parseFloat(parseFloat(result.bookingDetails[h].rate).toFixed(2)),
                                             CourierType: result.bookingDetails[h].courierType,
                                             CustomerNo: result.bookingDetails[h].customerNo,
+                                            CustomerNameWithNo: result.bookingDetails[h].customerNameWithNo,
+                                            DoNo: result.bookingDetails[h].doNo,
                                             Remarks: result.bookingDetails[h].remarks,
                                         });
                                     }
@@ -580,7 +580,6 @@
             else {
                 $('#txtBookingDate').siblings('span.error').css('visibility', 'hidden');
             }
-
             if ($('#ddlPayment').val().trim() == '') {
                 isValidItem = false;
                 $('#ddlPayment').siblings('span.error').css('visibility', 'visible');
@@ -588,8 +587,6 @@
             else {
                 $('#ddlPayment').siblings('span.error').css('visibility', 'hidden');
             }
-
-
             if ($('#ddlCourier').val().trim() == '') {
                 isValidItem = false;
                 $('#ddlCourier').siblings('span.error').css('visibility', 'visible');
@@ -753,9 +750,9 @@
 
                 var totalquantity = 0;
                 var amount = 0;
-
+                var totalCN = 0;
                 $.each(DetailsData, function (i, val) {
-
+                    totalCN++;
                     totalquantity += Number(val.Quantity);
                     amount += Number(val.Ammount);
 
@@ -802,6 +799,7 @@
 
                 $('.totalqty').text(totalquantity);
                 $('.totalamount').text(amount);
+                $('.totalcn').text(totalCN);
 
                 //console.log("current", DetailsData);
                 $table.append($tbody);

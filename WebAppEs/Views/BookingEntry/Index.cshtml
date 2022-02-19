@@ -1,6 +1,18 @@
 ﻿@model IEnumerable<WebAppEs.ViewModel.Booking.MobileRND_BookingEntry_VM>
 @{ ViewData["Title"] = "Booking List"; }
 
+<style>
+    .dropdown-menu show {
+        position: absolute;
+        will-change: transform;
+        border-radius: 5px;
+        border: 2px solid;
+        top: 0px;
+        left: 0px;
+        transform: translate3d(-61px, -133px, 0px);
+    }
+    
+</style>
 
 <div class="x_panel shadow-lg bg-white rounded">
     <div class="x_title">
@@ -29,6 +41,9 @@
                                 <th>Courier</th>
                                 <th>Brand</th>
                                 <th>Product</th>
+                                <th style="text-align: center">Total CN</th>
+                                <th style="text-align: center">Quantity</th>
+                                <th style="text-align: center">Amount</th>
                                 <th style="text-align:center">Action's</th>
                             </tr>
                         </thead>
@@ -63,8 +78,17 @@
                                     <td style="vertical-align: middle;">
                                         @Html.DisplayFor(modelItem => item.Product)
                                     </td>
+                                    <td style="vertical-align: middle; text-align: center">
+                                        @Html.DisplayFor(modelItem => item.TotalCN)
+                                    </td>
+                                    <td style="vertical-align: middle; text-align: center">
+                                        @Html.DisplayFor(modelItem => item.TotalQuantity)
+                                    </td>
+                                    <td style="vertical-align: middle;text-align:center">
+                                        @Html.DisplayFor(modelItem => item.TotalAmount)
+                                    </td>
                                     <td style="text-align:center">
-                                        <div class="btn-group">
+                                        <div class="btn-group" style="">
                                             <a style="color: #3247dd; font-size: large; font-weight: bolder; padding: 0px; cursor:pointer" class="btn btn-sm " data-toggle="dropdown"
                                                aria-haspopup="true" aria-expanded="false">
                                                 <i class="fa fa-ellipsis-v"></i>

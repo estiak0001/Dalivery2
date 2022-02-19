@@ -9,6 +9,8 @@ using WebAppEs.ViewModel.Booking;
 using WebAppEs.ViewModel.Courier;
 using WebAppEs.ViewModel.Customer;
 using WebAppEs.ViewModel.EmployeeInformation;
+using WebAppEs.ViewModel.Indexing;
+using WebAppEs.ViewModel.ProductModel;
 using WebAppEs.ViewModel.SalesChannel;
 using WebAppEs.ViewModel.Zone;
 
@@ -76,6 +78,7 @@ namespace WebAppEs.Services
                 UpdateDataSet.Address = viewModel.Address;
                 UpdateDataSet.DeliveryAddress = viewModel.DeliveryAddress;
                 UpdateDataSet.PhoneNo = viewModel.PhoneNo;
+                UpdateDataSet.DeliveryDetails = viewModel.DeliveryDetails;
                 _context.MobileRND_CustomerInfo.Update(UpdateDataSet);
                 result = _context.SaveChanges();
             }
@@ -97,6 +100,7 @@ namespace WebAppEs.Services
                     Address = viewModel.Address,
                     DeliveryAddress = viewModel.DeliveryAddress,
                     PhoneNo = viewModel.PhoneNo,
+                    DeliveryDetails = viewModel.DeliveryDetails
                 });
                 result = _context.SaveChanges();
             }
@@ -139,6 +143,74 @@ namespace WebAppEs.Services
                     Brand = viewModel.BrandID
                 });
                 result = _context.SaveChanges();
+            }
+            return result > 0;
+        }
+
+        public async Task<bool> AddItemInformation(MobileRND_Items_VM viewModel)
+        {
+            var result = 0;
+            var UpdateDataSet = await _context.MobileRND_Items.Where(x => x.Id == viewModel.Id).FirstOrDefaultAsync();
+            var existing = await _context.MobileRND_Items.Where(x => x.Brand == viewModel.Brand && x.ModelId == viewModel.ModelId).FirstOrDefaultAsync();
+
+            if (UpdateDataSet != null)
+            {
+                UpdateDataSet.Brand = viewModel.Brand;
+                //UpdateDataSet.ModelId = viewModel.ModelId;
+                UpdateDataSet.ItemCode = viewModel.ItemCode;
+                UpdateDataSet.ItemName = viewModel.ItemName;
+                //UpdateDataSet.Grade = viewModel.Grade;
+
+                _context.MobileRND_Items.Update(UpdateDataSet);
+                result = await _context.SaveChangesAsync();
+            }
+            else
+            {
+                if (existing != null)
+                {
+                    return false;
+                }
+                else
+                {
+                    _context.MobileRND_Items.Add(new MobileRND_Items()
+                    {
+                        Brand = viewModel.Brand,
+                        ModelId = viewModel.ModelId,
+                        ItemCode = viewModel.ItemCode,
+                        ItemName = viewModel.ItemName
+                    });
+                    result = await _context.SaveChangesAsync();
+                }
+            }
+            return result > 0;
+        }
+
+        public async Task<bool> AddPartsModel(ProductModel_VM viewModel)
+        {
+            var result = 0;
+            var UpdateDataSet = await _context.MobileRND_ProductModel.Where(x => x.ID == viewModel.ID).FirstOrDefaultAsync();
+            var existing = await _context.MobileRND_ProductModel.Where(x => x.Name == viewModel.Name).FirstOrDefaultAsync();
+
+            if (UpdateDataSet != null)
+            {
+                UpdateDataSet.Name = viewModel.Name;
+                _context.MobileRND_ProductModel.Update(UpdateDataSet);
+                result = await _context.SaveChangesAsync();
+            }
+            else
+            {
+                if (existing != null)
+                {
+                    return false;
+                }
+                else
+                {
+                    _context.MobileRND_ProductModel.Add(new MobileRND_ProductModel()
+                    {
+                        Name = viewModel.Name,
+                    });
+                    result = await _context.SaveChangesAsync();
+                }
             }
             return result > 0;
         }
@@ -274,7 +346,9 @@ namespace WebAppEs.Services
                              Brand = znrmbra.BrandName,
                              Address = cu.Address,
                              DeliveryAddress = cu.DeliveryAddress,
-                             PhoneNo = cu.PhoneNo
+                             PhoneNo = cu.PhoneNo,
+                             DeliveryDetails = cu.DeliveryDetails,
+
                          }).ToList();
 
             return items;
@@ -316,7 +390,8 @@ namespace WebAppEs.Services
                              Brand = znrmbra.BrandName,
                              Address = cu.Address,
                              DeliveryAddress = cu.DeliveryAddress,
-                             PhoneNo = cu.PhoneNo
+                             PhoneNo = cu.PhoneNo,
+                             DeliveryDetails = cu.DeliveryDetails
                          }).ToList();
 
             return items;
@@ -369,6 +444,42 @@ namespace WebAppEs.Services
                              ContactNumber = cu.ContactNumber
                          }).ToList();
 
+            return items;
+        }
+
+        public List<MobileRND_Items_VM> GetAllItemsList()
+        {
+            var items = (from gwi in _context.MobileRND_Items
+                         join mm in _context.MobileRND_Brand
+                            on new { X1 = gwi.Brand } equals new { X1 = mm.Id }
+                            into znrmp
+                         from znrm in znrmp.DefaultIfEmpty()
+                         join mm2 in _context.MobileRND_ProductModel
+                            on new { X1 = gwi.ModelId } equals new { X1 = mm2.ID }
+                            into mod
+                         from model in mod.DefaultIfEmpty()
+                         select new MobileRND_Items_VM()
+                         {
+                             Id = gwi.Id,
+                             Brand = gwi.Brand,
+                             ModelId = gwi.ModelId,
+                             ItemCode = gwi.ItemCode,
+                             ItemName = gwi.ItemName,
+                             BrandName = znrm.BrandName,
+                             ModelName = model.Name,
+                             ItemNameWithItemCode = gwi.ItemName + " (" + gwi.ItemCode + ")"
+                         }).ToList();
+            return items;
+        }
+
+        public List<ProductModel_VM> GetAllPartsModelList()
+        {
+            var items = (from partModel in _context.MobileRND_ProductModel
+                         select new ProductModel_VM()
+                         {
+                             ID = partModel.ID,
+                             Name = partModel.Name,
+                         }).ToList();
             return items;
         }
 
@@ -486,7 +597,8 @@ namespace WebAppEs.Services
                              Brand = znrmbra.BrandName,
                              Address = cu.Address,
                              DeliveryAddress = cu.DeliveryAddress,
-                             PhoneNo = cu.PhoneNo
+                             PhoneNo = cu.PhoneNo,
+                             DeliveryDetails = cu.DeliveryDetails
                          }).FirstOrDefault();
 
             return items;
@@ -550,6 +662,45 @@ namespace WebAppEs.Services
                              BrandID = cu.Brand,
                              Brand = znrm.BrandName,
                              ContactNumber = cu.ContactNumber
+                         }).FirstOrDefault();
+
+            return items;
+        }
+
+        public MobileRND_Items_VM GetItem(Guid Id)
+        {
+            var items = (from gwi in _context.MobileRND_Items.Where(x=> x.Id == Id)
+                         join mm in _context.MobileRND_Brand
+                            on new { X1 = gwi.Brand } equals new { X1 = mm.Id }
+                            into znrmp
+                         from znrm in znrmp.DefaultIfEmpty()
+                         join mm2 in _context.MobileRND_ProductModel
+                            on new { X1 = gwi.ModelId } equals new { X1 = mm2.ID }
+                            into mod
+                         from model in mod.DefaultIfEmpty()
+                         select new MobileRND_Items_VM()
+                         {
+                             Id = gwi.Id,
+                             Brand = gwi.Brand,
+                             ModelId = gwi.ModelId,
+                             ItemCode = gwi.ItemCode,
+                             ItemName = gwi.ItemName,
+                             BrandName = znrm.BrandName,
+                             ModelName = model.Name,
+                             IsUpdate = "Update"
+                         }).FirstOrDefault();
+            return items;
+        }
+
+        public ProductModel_VM GetPartsModelList(Guid Id)
+        {
+            var items = (from partModel in _context.MobileRND_ProductModel.Where(x => x.ID == Id)
+
+                         select new ProductModel_VM()
+                         {
+                             ID = partModel.ID,
+                             Name = partModel.Name,
+                             IsUpdate = "Update"
                          }).FirstOrDefault();
 
             return items;

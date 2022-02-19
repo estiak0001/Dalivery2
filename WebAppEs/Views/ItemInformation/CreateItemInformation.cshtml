@@ -1,0 +1,95 @@
+﻿@model WebAppEs.ViewModel.Indexing.MobileRND_Items_VM
+@{
+    ViewData["Title"] = "Create Customer";
+}
+<style>
+    .rreedd {
+        color: red;
+    }
+</style>
+
+<div class="col-md-12 col-sm-12 ">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Add Item</h2>
+
+            <div class="clearfix"><a style="float: right;" class="btn btn-sm btn-dark" asp-action="Index">Back to List</a></div>
+        </div>
+        <div class="x_content">
+            <br />
+            <form asp-action="CreateItemInformation" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Brand <span class="rreedd required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <select asp-for="Brand" required id="ddlBrand" class="form-control form-control-sm select2">
+                            <option value="">--Select Brand--</option>
+                            @foreach (var item in Model.brandlist)
+                            {
+                                <option value="@item.Id">@item.BrandName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Model <span class="rreedd required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <select asp-for="ModelId" required id="ddlModel" class="form-control form-control-sm">
+                            <option value="">--Select Model--</option>
+                            @foreach (var item in Model.modelList)
+                            {
+                                <option value="@item.ID">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Item Code
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <input asp-for="@Model.ItemCode" placeholder="Enter Item Code" type="text" id="first-name" class="form-control form-control-sm">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                        Item Name
+                    </label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <input asp-for="@Model.ItemName" placeholder="Enter Item Name" type="text" id="first-name" class="form-control form-control-sm">
+                    </div>
+                </div>
+                
+                <div class="ln_solid"></div>
+                <div class="item form-group">
+                    <div class="col-md-6 col-sm-6 offset-md-3">
+
+                        @if (@Model.IsUpdate == "Update")
+                        {
+                            <button type="submit" class="btn btn-success">Update</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        }
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#ddlModel').select2();
+        });
+    </script>
+}
+

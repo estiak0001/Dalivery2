@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAppEs.Data;
 
 namespace WebAppEs.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220201053311_addmodel")]
+    partial class addmodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -330,9 +332,6 @@ namespace WebAppEs.Migrations
                         .HasColumnType("nvarchar(250)")
                         .HasMaxLength(250);
 
-                    b.Property<bool>("IsApprove")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsDelivered")
                         .HasColumnType("bit");
 
@@ -378,6 +377,9 @@ namespace WebAppEs.Migrations
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsApprove")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("LUser")
                         .HasColumnType("uniqueidentifier");
@@ -493,9 +495,6 @@ namespace WebAppEs.Migrations
                     b.Property<string>("DeliveryAddress")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DeliveryDetails")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid>("LUser")
                         .HasColumnType("uniqueidentifier");
 
@@ -563,94 +562,6 @@ namespace WebAppEs.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MobileRND_EmployeeInformation");
-                });
-
-            modelBuilder.Entity("WebAppEs.Entity.MobileRND_IndexingEntry", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Block")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("ColumNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Grade")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<DateTime>("IndexingDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("ItemId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("LUser")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("RackNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("Remarks")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StageNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MobileRND_IndexingEntry");
-                });
-
-            modelBuilder.Entity("WebAppEs.Entity.MobileRND_Items", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("Brand")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ItemCode")
-                        .HasColumnType("nvarchar(150)")
-                        .HasMaxLength(150);
-
-                    b.Property<string>("ItemName")
-                        .HasColumnType("nvarchar(150)")
-                        .HasMaxLength(150);
-
-                    b.Property<Guid>("LUser")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ModelId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MobileRND_Items");
                 });
 
             modelBuilder.Entity("WebAppEs.Entity.MobileRND_PaymentType", b =>

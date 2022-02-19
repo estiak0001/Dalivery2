@@ -6,6 +6,8 @@ using WebAppEs.ViewModel.Booking;
 using WebAppEs.ViewModel.Courier;
 using WebAppEs.ViewModel.Customer;
 using WebAppEs.ViewModel.EmployeeInformation;
+using WebAppEs.ViewModel.Indexing;
+using WebAppEs.ViewModel.ProductModel;
 using WebAppEs.ViewModel.SalesChannel;
 using WebAppEs.ViewModel.Zone;
 
@@ -55,5 +57,15 @@ namespace WebAppEs.Services
         GetCourierRate GetCourierRateByCourierIDAndType(Guid CourierID, string Couriertype);
         MobileRND_CustomerInfo_VM GetCustomerByCustomerNo(string CustomerNo);
 
+
+        //Model
+        Task<bool> AddPartsModel(ProductModel_VM viewModel);
+        List<ProductModel_VM> GetAllPartsModelList();
+        ProductModel_VM GetPartsModelList(Guid Id);
+
+        //ItemInformation
+        Task<bool> AddItemInformation(MobileRND_Items_VM viewModel);
+        List<MobileRND_Items_VM> GetAllItemsList();
+        MobileRND_Items_VM GetItem(Guid Id);
     }
 }

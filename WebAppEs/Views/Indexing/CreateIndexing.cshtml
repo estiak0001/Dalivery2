@@ -1,0 +1,226 @@
+﻿@model WebAppEs.ViewModel.Indexing.MobileRND_IndexingEntry_VM
+@{
+    ViewData["Title"] = "Create Indexing";
+}
+<style>
+    .rreedd {
+        color: red;
+    }
+    .badge-dark {
+        color: #fff;
+        background-color: #3c8ddf;
+    }
+</style>
+
+<div class="col-md-12 col-sm-12 ">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Add Item to Index</h2>
+            <div class="clearfix"><a style="float: right;" class="btn btn-sm btn-dark" asp-action="Index">Back to List</a></div>
+        </div>
+        <div class="x_content">
+            <br />
+            <form asp-action="CreateIndexing" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="item form-group">
+                            <label class="col-form-label col-md-5 col-sm-5 label-align" for="first-name">
+                                Item <span class="rreedd required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 ">
+                                <select asp-for="ItemId" required id="ddlItem" class="form-control form-control-sm select2">
+                                    <option value="">--Select Item--</option>
+                                    @foreach (var item in Model.itemlist)
+                                    {
+                                        <option value="@item.Id">@item.ItemNameWithItemCode</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="col-form-label col-md-5 col-sm-5 label-align" for="first-name">
+                                Grade <span class="rreedd required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 ">
+                                <select asp-for="Grade" required id="ddlModel" class="form-control form-control-sm">
+                                    <option value="">--Select Grade--</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="col-form-label col-md-5 col-sm-5 label-align" for="first-name">
+                                Block
+                            </label>
+                            <div class="col-md-6 col-sm-6 ">
+                                <input asp-for="@Model.Block" required placeholder="Enter Block" type="text" id="first-name" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="col-form-label col-md-5 col-sm-5 label-align" for="first-name">
+                                Rack No.
+                            </label>
+                            <div class="col-md-6 col-sm-6 ">
+                                <input asp-for="@Model.RackNo" required placeholder="Enter Rack No." type="text" id="first-name" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="item form-group">
+                            <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                                Stage No.
+                            </label>
+                            <div class="col-md-6 col-sm-6 ">
+                                <input asp-for="@Model.StageNo" required placeholder="Enter Stage No." type="text" id="first-name" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                                Colum No.
+                            </label>
+                            <div class="col-md-6 col-sm-6 ">
+                                <input asp-for="@Model.ColumNo" required placeholder="Enter Colum No." type="text" id="first-name" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                                Date
+                            </label>
+                            <div class="col-md-6 col-sm-6 ">
+                                <input asp-for="@Model.IndexingDate" required placeholder="Enter Date" type="date" id="first-name" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
+                                Remarks
+                            </label>
+                            <div class="col-md-6 col-sm-6 ">
+                                <input asp-for="@Model.Remarks"  placeholder="Enter Remarks" type="text" id="first-name" class="form-control form-control-sm">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="ln_solid"></div>
+                <div class="item form-group">
+                    <div class="col-md-6 col-sm-6 offset-md-3">
+
+                        @if (@Model.IsUpdate == "Update")
+                        {
+                            <button type="submit" class="btn btn-success ss">Update</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-success ss">Submit</button>
+                        }
+                    </div>
+                </div>
+            </form>
+            <br />
+            <div>
+                <h5 class="badge badge-dark notifytext" style="color: white; font-size: 19px;display:none ">This Item Already Indexed</h5>
+                <div id="ItemWiseIndexData">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+    <script>
+        var LoadItemWiseDataData = [];
+        $(document).ready(function () {
+            $('#ddlItem').select2();
+
+            $('#ddlItem').on("change", function () {
+                var ItemId = $('#ddlItem').val();
+                    if (ItemId != "") {
+                        var obj = { "ItemId": ItemId, "Brand": null, "Model": null, "Grade": "" };
+                            AjaxCall('@Url.Action("LoadIndexingDataItemWise", "Indexing")', obj, 'POST').done(function (response) {
+                                //console.log(response);
+                                if (response.length != 0) {
+                                    LoadItemWiseDataData = [];
+                                    for (var h = 0; h < response.length; h++) {
+
+                                        console.log(response[h].brandName);
+
+                                        LoadItemWiseDataData.push({
+                                            Brand: response[h].brandName,
+                                            Model: response[h].modelName,
+                                            ItemCode: response[h].itemCode,
+                                            Grade: response[h].grade,
+                                            Block: response[h].block,
+                                            RackNo: response[h].rackNo,
+                                            StageNo: response[h].stageNo,
+                                            ColumNo: response[h].columNo,
+                                            Date: response[h].indexingDateString,
+                                            Remarks: response[h].remarks,
+                                        });
+                                    }
+                                    console.log(LoadItemWiseDataData);
+                                    
+                                }
+                                GeneratedItemsTable();
+                            }).fail(function (error) {
+                                alert("Something went Wrong");
+                            });
+                    }
+                });
+        });
+
+        function AjaxCall(url, data, type) {
+            return $.ajax({
+                url: url,
+                type: type,
+                data: data,
+                //contentType: 'application/json'
+            });
+        }
+        function GeneratedItemsTable() {
+            if (LoadItemWiseDataData.length > 0) {
+
+                var $table = $('<table style="text-align: center;" id="tempTable" class="table table-sm table-striped table-bordered" style="width:100%"/>');
+                $table.append('<thead style = "background-color: #323232; color: white;"><tr><th>Brand</th><th>Model</th><th>Item Code</th><th>Grade</th><th>Block</th><th>Rack No.</th><th>Stage No.</th><th>Colum No.</th><th>Date</th><th>Remarks</th></tr></thead>');
+                var $tbody = $('<tbody/>');
+
+                $.each(LoadItemWiseDataData, function (i, val) {
+                    var $row = $('<tr/>');
+                    $row.append($('<td/>').html(val.Brand));
+                    $row.append($('<td/>').html(val.Model));
+                    $row.append($('<td/>').html(val.ItemCode));
+                    $row.append($('<td/>').html(val.Grade));
+                    $row.append($('<td/>').html(val.Block));
+                    $row.append($('<td/>').html(val.RackNo));
+                    $row.append($('<td/>').html(val.StageNo));
+                    $row.append($('<td/>').html(val.ColumNo));
+                    $row.append($('<td/>').html(val.Date));
+                    $row.append($('<td/>').html(val.Remarks));
+                    $tbody.append($row);
+                });
+
+                //console.log("current", DetailsData);
+                $table.append($tbody);
+                $('#ItemWiseIndexData').html($table);
+
+                $('.notifytext').show();
+                //$('.ss').prop("disabled", true);
+                
+                //$('#tempTable').DataTable({
+                //    "ordering": false,
+                //    pageLength: 50,
+                //});
+
+            }
+            else {
+                $('#ItemWiseIndexData').html('');
+            }
+        }
+    </script>
+}
+

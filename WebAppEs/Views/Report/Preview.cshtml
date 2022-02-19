@@ -102,6 +102,7 @@
             <div class="form-group row">
                 <div style="text-align:center" class="col-md-12 col-sm-12">
                     <button style="float:right" id="previewdata" type="button" class="btn btn-info">Preview</button>
+                    <button style="float:right" id="previewDailySummeryData" type="button" class="btn btn-info">Daily Summery</button>
                 </div>
             </div>
         </form>
@@ -156,6 +157,29 @@
                         }
                         console.log(dataList);
                         GeneratedItemsTable();
+                    }).fail(function (error) {
+                        alert(error.StatusText);
+                    });
+                }
+
+                else {
+                    alert("Please provide date range first!");
+                }
+
+            });
+
+            $('#previewDailySummeryData').click(function () {
+                var FromDate = $('#txtFromDate').val();
+                var ToDate = $('#txtToDate').val();
+                var BrandId = $('#ddlPayment').val();
+                
+
+                if (FromDate == "" && ToDate == "") {
+                    var obj = { "FromDate": FromDate, "ToDate": ToDate, "BrandId": BrandId };
+                    AjaxCall('@Url.Action("GetDailyReportData", "Report")', obj, 'POST').done(function (result) {
+
+                        console.log(result);
+
                     }).fail(function (error) {
                         alert(error.StatusText);
                     });

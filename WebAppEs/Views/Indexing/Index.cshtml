@@ -1,0 +1,90 @@
+﻿@model IEnumerable<WebAppEs.ViewModel.Indexing.MobileRND_IndexingEntry_VM>
+@{ ViewData["Title"] = "Indexing List"; }
+<div class="x_panel shadow p-3 mb-5 bg-white rounded">
+    <div class="container">
+        <div class="x_title">
+            <h2>List of Item Indexing</h2>
+            <div class="nav navbar-right panel_toolbox">
+                <a style="float:right" class="btn btn-info" asp-action="CreateIndexing"> <i class="fa fa-plus pr-2"></i> Create New</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card-box table-responsive">
+
+                        <table id="datatable-responsive" class="table table-sm  dt-responsive nowrap" cellspacing="0" width="100%">
+                            <thead style="background-color: #d7e3ef;">
+                                <tr>
+                                    <th>Sl</th>
+                                    <th>Brand</th>
+                                    <th>Model</th>
+                                    <th>Item Name</th>
+
+                                    <th>Grade</th>
+                                    <th>Block</th>
+                                    <th>Rack No</th>
+                                    <th>Stage No</th>
+                                    <th>Colum No</th>
+                                    <th>Date</th>
+                                    <th>Remarks</th>
+                                    <th style="text-align:center">Action's</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ 
+                                    var count = 0;
+                                }
+                                @foreach (var item in Model)
+                                {
+                                    count++;
+                                    var combineItem = item.ItemName + " (" + item.ItemCode + ")";
+                                    <tr>
+                                        <td>
+                                            @count
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.BrandName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ModelName)
+                                        </td>
+                                        <td>
+                                            @combineItem
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Grade)
+                                        </td>
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Block)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RackNo)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.StageNo)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ColumNo)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IndexingDateString)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Remarks)
+                                        </td>
+                                        <td style="text-align:center">
+                                            <a style=" font-size: large; color: blue;" asp-action="CreateIndexing" asp-route-id="@item.Id"><i class="fa fa-edit"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

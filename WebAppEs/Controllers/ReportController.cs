@@ -50,6 +50,7 @@ namespace WebAppEs.Controllers
         }
 
 
+
         [HttpPost]
         //[ValidateAntiForgeryToken]
         //[AllowAnonymous]
@@ -59,6 +60,19 @@ namespace WebAppEs.Controllers
             Guid GCourierID = CourierID == null ? Guid.Empty : Guid.Parse(CourierID);
             Guid GCoustomerID = CoustomerID == null ? Guid.Empty : Guid.Parse(CoustomerID);
             var result = _dataAccessService.PreviewReportData(FromDate, ToDate, GPaymentType, GCourierID, Status, GCoustomerID);
+            return Json(result);
+        }
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[AllowAnonymous]
+        public JsonResult GetDailyReportData(DateTime? FromDate, DateTime? ToDate, string BrandId)
+        {
+            Guid GBrandId = BrandId == null ? Guid.Empty : Guid.Parse(BrandId);
+
+            Guid brand = Guid.Parse("0AB71203-6969-4C2B-A03D-E320D3DADA98");
+            var result = _dataAccessService.DailySummeryReport(DateTime.Today, DateTime.Today, brand);
+           
             return Json(result);
         }
     }

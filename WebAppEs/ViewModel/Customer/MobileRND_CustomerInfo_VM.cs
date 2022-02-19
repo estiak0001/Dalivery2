@@ -28,6 +28,7 @@ namespace WebAppEs.ViewModel.Customer
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedOn { get; set; }
         public Guid LUser { get; set; }
+        public string DeliveryDetails { get; set; }
         public List<MobileRND_Brand_VM> brandList { get; set; }
         public List<MobileRND_Product_VM> productList { get; set; }
         public List<MobileRND_SalesChannel_VM> SalesChannelList { get; set; }
